@@ -20,9 +20,8 @@ import {
 
 function Overview({ setPage }: { setPage: (p: string) => void }) {
   return (
-    <div className="space-y-6">
-      {/* KPI-kort */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
         <KpiCard
           title="Totalt forbruk nå"
           value={kpis.totalPowerKw.toString()}
@@ -63,17 +62,11 @@ function Overview({ setPage }: { setPage: (p: string) => void }) {
           sub={`${kpis.buildings} bygg overvåkes`}
         />
       </div>
-
-      {/* Priskart */}
       <PriceChart />
-
-      {/* Energi */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <EnergyChart />
         <EnergyBarChart />
       </div>
-
-      {/* Bygg + alarmer */}
       <BuildingGrid onSelect={() => setPage('buildings')} />
       <AlarmTable compact />
     </div>
@@ -82,8 +75,8 @@ function Overview({ setPage }: { setPage: (p: string) => void }) {
 
 function EnergyPage() {
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="space-y-4 md:space-y-6">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
         <KpiCard
           title="Gjennomsnittlig COP"
           value={kpis.avgCop.toFixed(2)}
@@ -121,36 +114,61 @@ function EnergyPage() {
 export default function App() {
   const [page, setPage] = useState('overview')
   const [lastUpdated, setLastUpdated] = useState(new Date())
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
   useEffect(() => {
     const timer = setInterval(() => setLastUpdated(new Date()), 60_000)
     return () => clearInterval(timer)
   }, [])
 
+  const navigate = (p: string) => {
+    setPage(p)
+    setSidebarOpen(false)
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Demo banner */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-brand-600 text-white text-center py-2 px-4 text-sm flex items-center justify-center gap-4">
-        <span>🚀 <strong>Dette er en demo</strong> — Se hvordan NordSense optimaliserer energikostnadene dine i sanntid.</span>
-        <a
-          href="tel:+4791375775"
-          className="bg-white text-brand-700 font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-brand-50 transition-colors whitespace-nowrap"
-        >
-          📞 913 75 775
-        </a>
-        <a
-          href="mailto:stiskjer@gmail.com?subject=Tilbud NordSense energioptimalisering"
-          className="bg-white/20 text-white font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-white/30 transition-colors whitespace-nowrap"
-        >
-          E-post →
-        </a>
+      <div className="fixed top-0 left-0 right-0 z-50 bg-brand-600 text-white py-2 px-3 text-sm flex flex-wrap items-center justify-center gap-2 md:gap-4">
+        <span className="text-xs md:text-sm text-center">
+          🚀 <strong>Dette er en demo</strong>
+          <span className="hidden sm:inline"> — Se hvordan NordSense optimaliserer energikostnadene dine i sanntid.</span>
+        </span>
+        <div className="flex items-center gap-2">
+          <a
+            href="tel:+4791375775"
+            className="bg-white text-brand-700 font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-brand-50 transition-colors whitespace-nowrap"
+          >
+            📞 913 75 775
+          </a>
+          <a
+            href="mailto:stiskjer@gmail.com?subject=Tilbud NordSense energioptimalisering"
+            className="bg-white/20 text-white font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-white/30 transition-colors whitespace-nowrap"
+          >
+            E-post →
+          </a>
+        </div>
       </div>
-      <Sidebar page={page} setPage={setPage} />
-      <div className="ml-64 flex flex-col min-h-screen pt-9">
-        <Topbar page={page} lastUpdated={lastUpdated} />
-        <main className="flex-1 p-6">
-          {page === 'overview'      && <Overview setPage={setPage} />}
-          {page === 'buildings'     && <div className="space-y-6"><BuildingGrid onSelect={() => {}} /><DeviceTable /></div>}
+
+      {/* Mobile overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/40 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed top-9 bottom-0 left-0 z-40 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <Sidebar page={page} setPage={navigate} />
+      </div>
+
+      {/* Main */}
+      <div className="md:ml-64 flex flex-col min-h-screen pt-9">
+        <Topbar page={page} lastUpdated={lastUpdated} onMenuClick={() => setSidebarOpen(o => !o)} />
+        <main className="flex-1 p-3 md:p-6">
+          {page === 'overview'      && <Overview setPage={navigate} />}
+          {page === 'buildings'     && <div className="space-y-4 md:space-y-6"><BuildingGrid onSelect={() => {}} /><DeviceTable /></div>}
           {page === 'energy'        && <EnergyPage />}
           {page === 'optimization'  && <OptimizationLog />}
           {page === 'alarms'        && <AlarmTable />}
@@ -160,15 +178,15 @@ export default function App() {
               <p className="text-sm">Innstillinger — kommer snart</p>
             </div>
           )}
-          {page === 'contact'       && <ContactForm onPrivacy={() => setPage('privacy')} />}
+          {page === 'contact'       && <ContactForm onPrivacy={() => navigate('privacy')} />}
           {page === 'privacy'       && <PrivacyPolicy />}
           {page === 'about'         && <AboutPage />}
         </main>
-        <footer className="px-6 py-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
+        <footer className="px-4 md:px-6 py-3 border-t border-slate-100 text-xs text-slate-400 flex flex-wrap items-center justify-between gap-2">
           <span>NordSense HVAC Platform v1.0</span>
-          <div className="flex items-center gap-4">
-            <button onClick={() => setPage('privacy')} className="hover:text-brand-600 transition-colors">Personvern</button>
-            <span>Data oppdateres hvert 60. sek · Nord Pool NO1</span>
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('privacy')} className="hover:text-brand-600 transition-colors">Personvern</button>
+            <span className="hidden sm:inline">Data oppdateres hvert 60. sek · Nord Pool NO1</span>
           </div>
         </footer>
       </div>

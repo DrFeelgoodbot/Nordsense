@@ -1,4 +1,4 @@
-import { Bell, RefreshCw, Search } from 'lucide-react'
+import { Bell, RefreshCw, Search, Menu } from 'lucide-react'
 import { format } from 'date-fns'
 import { nb } from 'date-fns/locale'
 
@@ -15,12 +15,20 @@ const titles: Record<string, string> = {
   privacy:      'Personvernerklæring',
 }
 
-export function Topbar({ page, lastUpdated }: { page: string; lastUpdated: Date }) {
+export function Topbar({ page, lastUpdated, onMenuClick }: { page: string; lastUpdated: Date; onMenuClick?: () => void }) {
   return (
-    <header className="h-16 bg-white border-b border-slate-100 flex items-center px-6 gap-4 sticky top-9 z-10">
-      <div className="flex-1">
-        <h1 className="text-base font-semibold text-slate-800">{titles[page]}</h1>
-        <p className="text-xs text-slate-400">
+    <header className="h-14 md:h-16 bg-white border-b border-slate-100 flex items-center px-3 md:px-6 gap-3 md:gap-4 sticky top-9 z-10">
+      {/* Hamburger — mobile only */}
+      <button
+        onClick={onMenuClick}
+        className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+      >
+        <Menu size={20} className="text-slate-600" />
+      </button>
+
+      <div className="flex-1 min-w-0">
+        <h1 className="text-sm md:text-base font-semibold text-slate-800 truncate">{titles[page]}</h1>
+        <p className="text-xs text-slate-400 hidden sm:block">
           Sist oppdatert {format(lastUpdated, 'HH:mm:ss', { locale: nb })}
         </p>
       </div>
