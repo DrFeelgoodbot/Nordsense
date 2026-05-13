@@ -1,0 +1,134 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# SYSTEM AIR — Modbus RTU registerdefinisjoner
+# Protokoll: Modbus RTU over RS485, 19200 8N1
+# Alle adresser er 0-baserte holding registers om ikke annet angitt
+# Referanse: System Air "Modbus Communication Protocol" dok. 2070461
+# ─────────────────────────────────────────────────────────────────────────────
+
+manufacturer: systemair
+
+# ── Topline EC / Save VSR / VSC / VST (ventilasjonssentraler) ────────────────
+# Dekker: SAVE VTR 150/200/300/500/700/1200 B og tilsvarende Topline-varianter
+Topline_SAVE:
+  description: "System Air Topline EC / SAVE VTR ventilasjon"
+  baud: 19200
+  parity: N
+  stopbits: 1
+  word_order: big_endian
+  function_code_read: 3     # Read Holding Registers
+  function_code_write: 6    # Write Single Register
+
+  temperatures:
+    supply_air_temp:     { address: 0,   type: holding, scale: 0.1, unit: "°C", description: "Tilluft etter varmebatteri" }
+    extract_air_temp:    { address: 1,   type: holding, scale: 0.1, unit: "°C", description: "Avtrekksluft" }
+    outdoor_air_temp:    { address: 2,   type: holding, scale: 0.1, unit: "°C", description: "Uteluft" }
+    exhaust_air_temp:    { address: 3,   type: holding, scale: 0.1, unit: "°C", description: "Avkastluft (etter rotor/plate)" }
+    room_temp:           { address: 4,   type: holding, scale: 0.1, unit: "°C", description: "Romtemperatur (ekstern probe)" }
+    supply_temp_after_HX:{ address: 5,   type: holding, scale: 0.1, unit: "°C", description: "Tilluft etter varmegjenvinning" }
+    heating_coil_temp:   { address: 6,   type: holding, scale: 0.1, unit: "°C", description: "Tilluft etter varmebatteri" }
+    cooling_coil_temp:   { address: 7,   type: holding, scale: 0.1, unit: "°C", description: "Tilluft etter kjølebatteri" }
+
+  airflow:
+    supply_fan_rpm:      { address: 10,  type: holding, scale: 1,   unit: "rpm",   description: "Tilluftsvifte turtall" }
+    extract_fan_rpm:     { address: 11,  type: holding, scale: 1,   unit: "rpm",   description: "Avtrekksvifte turtall" }
+    supply_fan_pct:      { address: 12,  type: holding, scale: 0.1, unit: "%",     description: "Tilluftsvifte kapasitet" }
+    extract_fan_pct:     { address: 13,  type: holding, scale: 0.1, unit: "%",     description: "Avtrekksvifte kapasitet" }
+    supply_airflow_m3h:  { address: 14,  type: holding, scale: 1,   unit: "m³/h",  description: "Tilluftsmengde" }
+    extract_airflow_m3h: { address: 15,  type: holding, scale: 1,   unit: "m³/h",  description: "Avtrekksmengde" }
+    SFP_supply:          { address: 16,  type: holding, scale: 0.01, unit: "kW/(m³/s)", description: "Spesifikk vifte effekt tilluft" }
+    SFP_extract:         { address: 17,  type: holding, scale: 0.01, unit: "kW/(m³/s)", description: "Spesifikk vifte effekt avtrekk" }
+
+  air_quality:
+    humidity_supply:     { address: 20,  type: holding, scale: 0.1, unit: "%RH",  description: "Relativ fuktighet tilluft" }
+    humidity_extract:    { address: 21,  type: holding, scale: 0.1, unit: "%RH",  description: "Relativ fuktighet avtrekk" }
+    humidity_room:       { address: 22,  type: holding, scale: 0.1, unit: "%RH",  description: "Romfuktighet" }
+    CO2_supply:          { address: 23,  type: holding, scale: 1,   unit: "ppm",  description: "CO2 tilluft" }
+    CO2_extract:         { address: 24,  type: holding, scale: 1,   unit: "ppm",  description: "CO2 avtrekk / rom" }
+    VOC_level:           { address: 25,  type: holding, scale: 1,   unit: "ppm",  description: "VOC-nivå" }
+
+  heat_recovery:
+    HX_efficiency:       { address: 30,  type: holding, scale: 0.1, unit: "%",    description: "Varmegjenvinningsgrad temperatur" }
+    HX_bypass_pos:       { address: 31,  type: holding, scale: 0.1, unit: "%",    description: "Bypass-spjeld posisjon (0=lukket, 100=åpen)" }
+    rotor_speed_pct:     { address: 32,  type: holding, scale: 0.1, unit: "%",    description: "Rotorvifte hastighet (roterende gjenvinner)" }
+
+  coils:
+    heating_valve_pct:   { address: 40,  type: holding, scale: 0.1, unit: "%",    description: "Varmebatteri-ventil (0–100%)" }
+    cooling_valve_pct:   { address: 41,  type: holding, scale: 0.1, unit: "%",    description: "Kjølebatteri-ventil (0–100%)" }
+    heating_power_kw:    { address: 42,  type: holding, scale: 0.1, unit: "kW",   description: "Varmebatteri effekt" }
+    cooling_power_kw:    { address: 43,  type: holding, scale: 0.1, unit: "kW",   description: "Kjølebatteri effekt" }
+    electric_heat_kw:    { address: 44,  type: holding, scale: 0.1, unit: "kW",   description: "Elektrisk ettervarmebatteri" }
+
+  energy:
+    total_power_kw:      { address: 50,  type: holding, scale: 0.01, unit: "kW",  description: "Total effekt (vifter + batteri)" }
+    fan_power_kw:        { address: 51,  type: holding, scale: 0.01, unit: "kW",  description: "Vifte-effekt totalt" }
+    energy_kwh_today:    { address: 52,  type: holding, scale: 0.1,  unit: "kWh", description: "Energiforbruk i dag" }
+    energy_kwh_month:    { address: 53,  type: holding, scale: 1,    unit: "kWh", description: "Energiforbruk denne måneden" }
+    heat_recovered_kw:   { address: 54,  type: holding, scale: 0.1,  unit: "kW",  description: "Gjenvunnet varmeeffekt" }
+
+  filters:
+    filter_dp_supply_pa: { address: 60,  type: holding, scale: 1,   unit: "Pa",  description: "Differansetrykk filter tilluft" }
+    filter_dp_extr_pa:   { address: 61,  type: holding, scale: 1,   unit: "Pa",  description: "Differansetrykk filter avtrekk" }
+    filter_alarm_supply: { address: 62,  type: holding, scale: 1,   description: "0=OK, 1=skittent filter tilluft" }
+    filter_alarm_extr:   { address: 63,  type: holding, scale: 1,   description: "0=OK, 1=skittent filter avtrekk" }
+
+  setpoints:
+    supply_temp_SP:      { address: 100, type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Tilluft temperatur setpunkt" }
+    room_temp_SP:        { address: 101, type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Romtemperatur setpunkt" }
+    airflow_pct_SP:      { address: 102, type: holding, scale: 0.1, unit: "%",   writable: true, description: "Luftmengde setpunkt (0–100%)" }
+    CO2_SP:              { address: 103, type: holding, scale: 1,   unit: "ppm", writable: true, description: "CO2 setpunkt for behovsstyring" }
+    humidity_SP:         { address: 104, type: holding, scale: 0.1, unit: "%RH", writable: true, description: "Fuktighets-setpunkt" }
+    night_cooling_SP:    { address: 105, type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Natt-kjøling setpunkt" }
+
+  control:
+    unit_on_off:         { address: 200, type: holding, scale: 1, writable: true, description: "0=stopp, 1=start" }
+    operation_mode:      { address: 201, type: holding, scale: 1, writable: true,
+                           description: "0=auto, 1=ventilasjon, 2=kjøling, 3=varme, 4=natt, 5=borte, 6=brannstopp" }
+    speed_level:         { address: 202, type: holding, scale: 1, writable: true,
+                           description: "1=lav, 2=normal, 3=høy, 4=boost (om ikke VAV)" }
+    summer_winter:       { address: 203, type: holding, scale: 1, writable: true, description: "0=vinter, 1=sommer" }
+
+  status:
+    unit_status:         { address: 300, type: holding, scale: 1, description: "Statusord bitmask" }
+    alarm_code:          { address: 301, type: holding, scale: 1, description: "Aktiv alarmkode" }
+    alarm_word:          { address: 302, type: holding, scale: 1, description: "Alarm bitmask" }
+    operating_hours:     { address: 303, type: holding, scale: 1, unit: "h", description: "Totale driftstimer" }
+    service_alarm:       { address: 304, type: holding, scale: 1, description: "0=OK, 1=service nødvendig" }
+
+  alarm_codes:
+    1:  "Frostbeskyttelse tilluft"
+    2:  "Høy tillufttemperatur"
+    3:  "Tilluft temperaturføler feil"
+    4:  "Avtrekk temperaturføler feil"
+    5:  "Uteluft temperaturføler feil"
+    6:  "Skittent filter tilluft"
+    7:  "Skittent filter avtrekk"
+    8:  "Tilluft vifte stopp"
+    9:  "Avtrekk vifte stopp"
+    10: "Branntermostat utløst"
+    11: "CO2-sensor feil"
+    12: "Fuktighetssensor feil"
+    13: "Kommunikasjonstimeout"
+    14: "Rotorgjenvinning feil"
+    15: "Frost-risiko kondensering"
+
+# ── System Air IAM / Villavent VR-serien (bolig-VAV) ─────────────────────────
+Villavent_VR:
+  description: "System Air Villavent VR / IAM boligventilasjon"
+  baud: 9600
+  parity: N
+  stopbits: 1
+
+  registers:
+    supply_temp:         { address: 0,  type: holding, scale: 0.1, unit: "°C" }
+    extract_temp:        { address: 1,  type: holding, scale: 0.1, unit: "°C" }
+    outdoor_temp:        { address: 2,  type: holding, scale: 0.1, unit: "°C" }
+    supply_fan_pct:      { address: 10, type: holding, scale: 1,   unit: "%" }
+    extract_fan_pct:     { address: 11, type: holding, scale: 1,   unit: "%" }
+    HX_efficiency:       { address: 20, type: holding, scale: 0.1, unit: "%" }
+    filter_alarm:        { address: 30, type: holding, scale: 1 }
+    alarm_code:          { address: 31, type: holding, scale: 1 }
+    supply_temp_SP:      { address: 100, type: holding, scale: 0.1, unit: "°C", writable: true }
+    airflow_SP:          { address: 101, type: holding, scale: 1,   unit: "%",  writable: true }
+    unit_on:             { address: 200, type: holding, scale: 1, writable: true }
+    speed_mode:          { address: 201, type: holding, scale: 1, writable: true,
+                           description: "1=lav, 2=normal, 3=høy" }

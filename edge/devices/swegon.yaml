@@ -1,0 +1,195 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# SWEGON — Modbus RTU registerdefinisjoner
+# Protokoll: Modbus RTU over RS485, 19200 8N1 (standard)
+# Alle adresser er 0-baserte holding registers (FC3/FC6)
+# Referanse: Swegon "GOLD / CASA Modbus RTU Communication" dok. 98721_003
+# ─────────────────────────────────────────────────────────────────────────────
+
+manufacturer: swegon
+
+# ── Swegon GOLD RX / LP / VX / CX — kommersiell AHU ─────────────────────────
+# Dekker: GOLD RX (roterende gjenvinner), LP (plate), VX (varmepumpe), CX (kjøl)
+# Referanse: Swegon SGCONMB001 "GOLD Modbus Protocol"
+GOLD:
+  description: "Swegon GOLD RX/LP/VX/CX kommersiell ventilasjonssentral"
+  baud: 19200
+  parity: N
+  stopbits: 1
+  word_order: big_endian
+  timeout: 1.0
+
+  temperatures:
+    OAT:                 { address: 0,   type: holding, scale: 0.1, unit: "°C",  description: "Uteluft (Outdoor Air Temp)" }
+    SAT:                 { address: 1,   type: holding, scale: 0.1, unit: "°C",  description: "Tilluft (Supply Air Temp)" }
+    EAT:                 { address: 2,   type: holding, scale: 0.1, unit: "°C",  description: "Avtrekksluft (Extract Air Temp)" }
+    EHAT:                { address: 3,   type: holding, scale: 0.1, unit: "°C",  description: "Avkastluft etter gjenvinning" }
+    RAT:                 { address: 4,   type: holding, scale: 0.1, unit: "°C",  description: "Romtemperatur (Room Air Temp)" }
+    SHAT:                { address: 5,   type: holding, scale: 0.1, unit: "°C",  description: "Tilluft etter varmegjenvinning" }
+    heating_coil_out:    { address: 6,   type: holding, scale: 0.1, unit: "°C",  description: "Tilluft etter varmebatteri" }
+    cooling_coil_out:    { address: 7,   type: holding, scale: 0.1, unit: "°C",  description: "Tilluft etter kjølebatteri" }
+    frost_protection:    { address: 8,   type: holding, scale: 0.1, unit: "°C",  description: "Frostbeskyttelsestemperatur (etter rotor)" }
+    DHW_temp:            { address: 9,   type: holding, scale: 0.1, unit: "°C",  description: "Varmtvann temp (GOLD VX)" }
+
+  fans:
+    supply_fan_pct:      { address: 10,  type: holding, scale: 0.1, unit: "%",     description: "Tilluftsvifte kapasitet" }
+    extract_fan_pct:     { address: 11,  type: holding, scale: 0.1, unit: "%",     description: "Avtrekksvifte kapasitet" }
+    supply_fan_rpm:      { address: 12,  type: holding, scale: 1,   unit: "rpm",   description: "Tilluftsvifte turtall" }
+    extract_fan_rpm:     { address: 13,  type: holding, scale: 1,   unit: "rpm",   description: "Avtrekksvifte turtall" }
+    supply_airflow_m3h:  { address: 14,  type: holding, scale: 1,   unit: "m³/h",  description: "Tilluftsmengde" }
+    extract_airflow_m3h: { address: 15,  type: holding, scale: 1,   unit: "m³/h",  description: "Avtrekksmengde" }
+    supply_SFP:          { address: 16,  type: holding, scale: 0.001, unit: "kW/(m³/s)", description: "SFP tilluft" }
+    extract_SFP:         { address: 17,  type: holding, scale: 0.001, unit: "kW/(m³/s)", description: "SFP avtrekk" }
+    total_SFP:           { address: 18,  type: holding, scale: 0.001, unit: "kW/(m³/s)", description: "Total SFP begge vifter" }
+
+  heat_recovery:
+    HR_efficiency_temp:  { address: 20,  type: holding, scale: 0.1, unit: "%",    description: "Temperaturvirkningsgrad gjenvinner" }
+    HR_efficiency_hum:   { address: 21,  type: holding, scale: 0.1, unit: "%",    description: "Fuktighets-virkningsgrad (roterende)" }
+    bypass_position:     { address: 22,  type: holding, scale: 0.1, unit: "%",    description: "Bypass-spjeld posisjon (0=lukket)" }
+    rotor_speed_pct:     { address: 23,  type: holding, scale: 0.1, unit: "%",    description: "Rotorgjenvinner hastighet" }
+    defrost_rotor:       { address: 24,  type: holding, scale: 1,   description: "Rotoravising aktiv (0/1)" }
+    frost_guard_active:  { address: 25,  type: holding, scale: 1,   description: "Frostbeskyttelse aktiv" }
+
+  air_quality:
+    humidity_SAT:        { address: 30,  type: holding, scale: 0.1, unit: "%RH",  description: "Relativ fuktighet tilluft" }
+    humidity_EAT:        { address: 31,  type: holding, scale: 0.1, unit: "%RH",  description: "Relativ fuktighet avtrekk" }
+    humidity_RAT:        { address: 32,  type: holding, scale: 0.1, unit: "%RH",  description: "Relativ fuktighet rom" }
+    CO2_EAT:             { address: 33,  type: holding, scale: 1,   unit: "ppm",  description: "CO2 avtrekk (romindikasjon)" }
+    CO2_RAT:             { address: 34,  type: holding, scale: 1,   unit: "ppm",  description: "CO2 rom (ekstern probe)" }
+    VOC_level:           { address: 35,  type: holding, scale: 1,   unit: "ppb",  description: "VOC-nivå" }
+    IAQ_index:           { address: 36,  type: holding, scale: 1,   description: "IAQ-indeks (0–100)" }
+
+  coils_valves:
+    heating_valve_pct:   { address: 40,  type: holding, scale: 0.1, unit: "%",    description: "Varmebatteri ventil (0–100%)" }
+    cooling_valve_pct:   { address: 41,  type: holding, scale: 0.1, unit: "%",    description: "Kjølebatteri ventil (0–100%)" }
+    heating_power_kw:    { address: 42,  type: holding, scale: 0.1, unit: "kW",   description: "Varme-effekt" }
+    cooling_power_kw:    { address: 43,  type: holding, scale: 0.1, unit: "kW",   description: "Kjøle-effekt" }
+    electric_heater_pct: { address: 44,  type: holding, scale: 0.1, unit: "%",    description: "El-ettervarmebatteri kapasitet" }
+    electric_heater_kw:  { address: 45,  type: holding, scale: 0.1, unit: "kW",   description: "El-ettervarmebatteri effekt" }
+    DX_cooling_stage:    { address: 46,  type: holding, scale: 1,   description: "DX-kjøling kapasitetstrinn (GOLD VX/CX)" }
+
+  filters:
+    filter_dp_supply_pa: { address: 50,  type: holding, scale: 1,   unit: "Pa",   description: "Filter ΔP tilluft (Pa)" }
+    filter_dp_extr_pa:   { address: 51,  type: holding, scale: 1,   unit: "Pa",   description: "Filter ΔP avtrekk (Pa)" }
+    filter_alarm_supply: { address: 52,  type: holding, scale: 1,   description: "Filteralarm tilluft (0=OK, 1=skitten)" }
+    filter_alarm_extract:{ address: 53,  type: holding, scale: 1,   description: "Filteralarm avtrekk" }
+    service_interval_h:  { address: 54,  type: holding, scale: 1,   unit: "h",    description: "Service om X timer" }
+
+  energy:
+    total_power_kw:      { address: 60,  type: holding, scale: 0.01, unit: "kW",  description: "Total effekt (vifter + batteri + el)" }
+    fan_power_kw:        { address: 61,  type: holding, scale: 0.01, unit: "kW",  description: "Vifteeffekt totalt" }
+    heat_power_kw:       { address: 62,  type: holding, scale: 0.01, unit: "kW",  description: "Varme-effekt batteri" }
+    cool_power_kw:       { address: 63,  type: holding, scale: 0.01, unit: "kW",  description: "Kjøle-effekt batteri" }
+    energy_kwh_today:    { address: 64,  type: holding, scale: 0.1,  unit: "kWh", description: "Energiforbruk i dag" }
+    energy_kwh_month:    { address: 65,  type: holding, scale: 1,    unit: "kWh", description: "Energiforbruk måneden" }
+    energy_kwh_year:     { address: 66,  type: holding, scale: 1,    unit: "kWh", description: "Energiforbruk år" }
+    heat_recovered_kw:   { address: 67,  type: holding, scale: 0.01, unit: "kW",  description: "Gjenvunnet varme" }
+    heat_recovered_kwh:  { address: 68,  type: holding, scale: 1,    unit: "kWh", description: "Gjenvunnet energi i dag" }
+    COP_system:          { address: 69,  type: holding, scale: 0.01, description: "System COP (gjenvunnet / tilført)" }
+
+  setpoints:
+    SAT_SP:              { address: 100, type: holding, scale: 0.1, unit: "°C",   writable: true, description: "Tilluft temperatur setpunkt" }
+    RAT_SP:              { address: 101, type: holding, scale: 0.1, unit: "°C",   writable: true, description: "Romtemperatur setpunkt" }
+    airflow_SP_pct:      { address: 102, type: holding, scale: 0.1, unit: "%",    writable: true, description: "Luftmengde setpunkt (0–100%)" }
+    supply_m3h_SP:       { address: 103, type: holding, scale: 1,   unit: "m³/h", writable: true, description: "Tilluft-mengde setpunkt" }
+    CO2_SP:              { address: 104, type: holding, scale: 1,   unit: "ppm",  writable: true, description: "CO2-setpunkt for behovsstyring" }
+    humidity_SP:         { address: 105, type: holding, scale: 0.1, unit: "%RH",  writable: true, description: "Fuktighetssetpunkt" }
+    humidity_SP_winter:  { address: 106, type: holding, scale: 0.1, unit: "%RH",  writable: true, description: "Fuktighetssetpunkt vinter" }
+    night_cooling_delta: { address: 107, type: holding, scale: 0.1, unit: "°C",   writable: true, description: "Natt-fri-kjøling delta" }
+    frost_prot_SP:       { address: 108, type: holding, scale: 0.1, unit: "°C",   writable: false, description: "Frostbeskyttelse setpunkt" }
+
+  control:
+    unit_on_off:         { address: 200, type: holding, scale: 1, writable: true,
+                           description: "0=stopp, 1=start" }
+    operation_mode:      { address: 201, type: holding, scale: 1, writable: true,
+                           description: "0=auto, 1=ventilasjon, 2=kjøling, 3=varme, 4=natt, 5=borte, 6=holiday, 7=brannstopp" }
+    speed_preset:        { address: 202, type: holding, scale: 1, writable: true,
+                           description: "1=lav, 2=normal, 3=høy, 4=boost" }
+    summer_winter_mode:  { address: 203, type: holding, scale: 1, writable: true,
+                           description: "0=vinter (varme), 1=sommer (kjøl)" }
+    override_mode:       { address: 204, type: holding, scale: 1, writable: true,
+                           description: "0=ingen, 1=tvang-høy, 2=tvang-lav, 3=brannstopp" }
+    free_cooling_enable: { address: 205, type: holding, scale: 1, writable: true,
+                           description: "0=deaktivert, 1=fri-kjøling via bypass aktiv" }
+
+  status:
+    unit_status_word:    { address: 300, type: holding, scale: 1, description: "Statusord bitmask" }
+    alarm_word1:         { address: 301, type: holding, scale: 1, description: "Alarmord 1 bitmask" }
+    alarm_word2:         { address: 302, type: holding, scale: 1, description: "Alarmord 2 bitmask" }
+    active_alarm_code:   { address: 303, type: holding, scale: 1, description: "Aktiv alarmkode" }
+    operating_hours:     { address: 304, type: holding, scale: 1, unit: "h",   description: "Totale driftstimer" }
+    service_due_h:       { address: 305, type: holding, scale: 1, unit: "h",   description: "Service forfaller om X timer" }
+
+  alarm_bits_word1:
+    0x0001: "Frostbeskyttelse tilluft"
+    0x0002: "Høy tillufttemperatur"
+    0x0004: "Tilluft temperatursensor feil"
+    0x0008: "Avtrekk temperatursensor feil"
+    0x0010: "Uteluft temperatursensor feil"
+    0x0020: "Romtemperatursensor feil"
+    0x0040: "Skittent filter tilluft"
+    0x0080: "Skittent filter avtrekk"
+    0x0100: "Tilluftsvifte overbelastning"
+    0x0200: "Avtrekksvifte overbelastning"
+    0x0400: "Rotorgjenvinning feil"
+    0x0800: "CO2-sensor feil"
+    0x1000: "Fuktighetssensor feil"
+    0x2000: "Frost-risiko — kondensering rotor"
+    0x4000: "Varmebatteri overtemperatur"
+    0x8000: "Branntermostat utløst"
+
+  alarm_bits_word2:
+    0x0001: "Kommunikasjonstimeout"
+    0x0002: "El-batteri feil"
+    0x0004: "DX-kjøling kompressorfeil"
+    0x0008: "Varmepumpe-feil (GOLD VX)"
+    0x0010: "Kondensatavløp tett"
+    0x0020: "VOC-sensor feil"
+    0x0040: "Differansetrykk tilluft feil"
+    0x0080: "Differansetrykk avtrekk feil"
+
+# ── Swegon CASA R (bolig) ─────────────────────────────────────────────────────
+# Referanse: Swegon "CASA Modbus Protocol" dok. SGCONCASA001
+CASA_R:
+  description: "Swegon CASA R boligventilasjon med varmegjenvinning"
+  baud: 9600
+  parity: N
+  stopbits: 1
+
+  registers:
+    outdoor_temp:        { address: 0,  type: holding, scale: 0.1, unit: "°C" }
+    supply_temp:         { address: 1,  type: holding, scale: 0.1, unit: "°C" }
+    extract_temp:        { address: 2,  type: holding, scale: 0.1, unit: "°C" }
+    exhaust_temp:        { address: 3,  type: holding, scale: 0.1, unit: "°C" }
+    supply_fan_pct:      { address: 10, type: holding, scale: 1,   unit: "%" }
+    extract_fan_pct:     { address: 11, type: holding, scale: 1,   unit: "%" }
+    HR_efficiency:       { address: 20, type: holding, scale: 0.1, unit: "%" }
+    humidity_extract:    { address: 30, type: holding, scale: 0.1, unit: "%RH" }
+    CO2_level:           { address: 31, type: holding, scale: 1,   unit: "ppm" }
+    filter_alarm:        { address: 40, type: holding, scale: 1 }
+    alarm_code:          { address: 41, type: holding, scale: 1 }
+    power_w:             { address: 50, type: holding, scale: 1,   unit: "W" }
+    supply_temp_SP:      { address: 100, type: holding, scale: 0.1, unit: "°C", writable: true }
+    speed_mode:          { address: 200, type: holding, scale: 1, writable: true,
+                           description: "0=av, 1=lav, 2=normal, 3=høy" }
+    unit_on:             { address: 201, type: holding, scale: 1, writable: true }
+
+# ── Swegon RUBY VAV-boks ──────────────────────────────────────────────────────
+RUBY_VAV:
+  description: "Swegon RUBY VAV-boks for romklimastyring"
+  baud: 19200
+  parity: N
+  stopbits: 1
+
+  registers:
+    room_temp:           { address: 0,  type: holding, scale: 0.1, unit: "°C",   description: "Romtemperatur" }
+    supply_temp:         { address: 1,  type: holding, scale: 0.1, unit: "°C",   description: "Tillufttemperatur" }
+    airflow_m3h:         { address: 10, type: holding, scale: 1,   unit: "m³/h", description: "Faktisk luftmengde" }
+    damper_pct:          { address: 11, type: holding, scale: 0.1, unit: "%",    description: "Spjeldposisjon" }
+    CO2_room:            { address: 20, type: holding, scale: 1,   unit: "ppm",  description: "CO2 rom" }
+    humidity_room:       { address: 21, type: holding, scale: 0.1, unit: "%RH",  description: "Fuktighet rom" }
+    room_temp_SP:        { address: 100, type: holding, scale: 0.1, unit: "°C",  writable: true }
+    airflow_SP_m3h:      { address: 101, type: holding, scale: 1,   unit: "m³/h", writable: true }
+    CO2_SP:              { address: 102, type: holding, scale: 1,   unit: "ppm",  writable: true }
+    operation_mode:      { address: 200, type: holding, scale: 1, writable: true,
+                           description: "0=auto, 1=tilstedeværelse, 2=borte, 3=natt" }
+    alarm_code:          { address: 300, type: holding, scale: 1 }

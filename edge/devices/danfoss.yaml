@@ -1,0 +1,166 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# DANFOSS — Modbus RTU registerdefinisjoner
+# Protokoll: Modbus RTU over RS485
+# ─────────────────────────────────────────────────────────────────────────────
+
+manufacturer: danfoss
+
+# ── Danfoss FC-serie frekvensomformere ────────────────────────────────────────
+# Dekker: FC51, FC101, FC102, FC202, FC301, FC302
+# Modbus-adresse = (parameter_gruppe × 100) + parameter_nr
+# Eksempel: parameter 16-10 (Power kW) → Modbus-adresse 16*100+10 = 1610
+# Referanse: Danfoss MG33MM "FC 300 Modbus RTU"
+FC_drive:
+  description: "Danfoss FC-serie frekvensomformer (FC51/101/102/202/301/302)"
+  baud: 19200
+  parity: E
+  stopbits: 1
+  word_order: big_endian
+  slave_range: "1–31"
+
+  # ── Gruppe 1: Driftskommandoer (skriv) ──
+  control:
+    control_word:        { address: 1,    type: holding, scale: 1,    writable: true,
+                           description: "CTW: bit0=stopp, bit1=start/reset, bit2=DCbrake, bit3=coast, bit10=frigang, bit11=releveranse" }
+    speed_reference_pct: { address: 2,    type: holding, scale: 0.01, unit: "%",   writable: true, description: "Hastighetsreferanse (0–100%)" }
+    speed_ref_rpm:       { address: 3,    type: holding, scale: 1,    unit: "rpm", writable: true, description: "Referanse i RPM (om konfigurert)" }
+
+  # ── Gruppe 16: Leseverdier (P16-xx) ──
+  readouts:
+    control_word_fb:     { address: 1600, type: holding, scale: 1,    description: "Tilbakemelding kontrollord" }
+    ref_pct:             { address: 1601, type: holding, scale: 0.01, unit: "%",    description: "Aktiv referanse %" }
+    main_actual_pct:     { address: 1602, type: holding, scale: 0.01, unit: "%",    description: "Prosessverdi (PID tilbakemelding)" }
+    status_word:         { address: 1603, type: holding, scale: 1,    description: "Statusord bitmask" }
+    power_kw:            { address: 1610, type: holding, scale: 0.01, unit: "kW",   description: "Aktiv effekt kW" }
+    motor_voltage:       { address: 1612, type: holding, scale: 0.1,  unit: "V",    description: "Motorspanning" }
+    output_freq_hz:      { address: 1613, type: holding, scale: 0.01, unit: "Hz",   description: "Utgangsfrekvens" }
+    motor_current:       { address: 1614, type: holding, scale: 0.01, unit: "A",    description: "Motorstrøm" }
+    torque_pct:          { address: 1616, type: holding, scale: 0.1,  unit: "%",    description: "Moment i prosent av nominelt" }
+    speed_rpm:           { address: 1617, type: holding, scale: 1,    unit: "rpm",  description: "Motorhastighet" }
+    motor_thermal:       { address: 1618, type: holding, scale: 0.1,  unit: "%",    description: "Termisk motorbelastning" }
+    DC_link_voltage:     { address: 1630, type: holding, scale: 0.1,  unit: "V",    description: "DC-mellomleddsspenning" }
+    heatsink_temp:       { address: 1634, type: holding, scale: 0.1,  unit: "°C",   description: "Kjøleribbetemperatur" }
+    inverter_current:    { address: 1636, type: holding, scale: 0.01, unit: "A",    description: "Nominell invertstrøm" }
+    input_power_kw:      { address: 1639, type: holding, scale: 0.01, unit: "kW",   description: "Inngangeffekt (nettside)" }
+    AI53_voltage:        { address: 1662, type: holding, scale: 0.001, unit: "V",   description: "Analog inngang AI53" }
+    AI54_mA:             { address: 1664, type: holding, scale: 0.001, unit: "mA",  description: "Analog inngang AI54" }
+    alarm_word:          { address: 1670, type: holding, scale: 1,    description: "Alarmord 1 bitmask" }
+    alarm_word2:         { address: 1671, type: holding, scale: 1,    description: "Alarmord 2 bitmask" }
+    warning_word:        { address: 1672, type: holding, scale: 1,    description: "Varselord bitmask" }
+    kwh_counter:         { address: 1675, type: holding, scale: 1,    unit: "kWh",  description: "Energiteller (kWh)" }
+
+  # ── Gruppe 3: PID-referanser / setpunkter (P3-xx) ──
+  setpoints:
+    PID_setpoint:        { address: 2021, type: holding, scale: 0.01, writable: true,
+                           description: "PID prosesssetpunkt (enhet avhenger av konfig)" }
+    min_freq_hz:         { address: 401,  type: holding, scale: 0.01, unit: "Hz", writable: false, description: "Min utgangsfrekvens" }
+    max_freq_hz:         { address: 402,  type: holding, scale: 0.01, unit: "Hz", writable: false, description: "Maks utgangsfrekvens" }
+    ramp_up_s:           { address: 301,  type: holding, scale: 0.01, unit: "s",  writable: false, description: "Rampe opp tid (sek)" }
+    ramp_down_s:         { address: 302,  type: holding, scale: 0.01, unit: "s",  writable: false, description: "Rampe ned tid (sek)" }
+
+  alarm_bits:            # bitmask for alarm_word P16-70
+    0x0001: "Overstrøm"
+    0x0002: "Overspenning"
+    0x0004: "Underspenning"
+    0x0008: "Jordfeil"
+    0x0010: "Kortslutning"
+    0x0020: "Kjøleribbetemperatur for høy"
+    0x0040: "Motortemperatur for høy"
+    0x0080: "Termistor utløst"
+    0x0100: "Fase feil inngang"
+    0x0200: "Phase asymmetri motor"
+    0x0400: "Vifte feil (interne)"
+    0x0800: "24V forsyning feil"
+    0x1000: "Inkodet encoder feil"
+    0x2000: "Kommunikasjonstimeout"
+    0x4000: "IGBT feil"
+    0x8000: "Intern feil"
+
+# ── Danfoss AK-SC255 / AK-SC355 — kjøleanlegg supervisory ────────────────────
+# Referanse: Danfoss "AK-SC 255 Service Manual" 521B0964
+AK_SC:
+  description: "Danfoss AK-SC255/355 kjølesystem supervisorkontroller"
+  baud: 38400
+  parity: E
+  stopbits: 1
+
+  registers:
+    store_temp_1:        { address: 100, type: input, scale: 0.01, unit: "°C", description: "Kjølerom 1 temperatur" }
+    store_temp_2:        { address: 101, type: input, scale: 0.01, unit: "°C", description: "Kjølerom 2 temperatur" }
+    case_temp_1:         { address: 110, type: input, scale: 0.01, unit: "°C", description: "Diskkjøler 1 lufttemperatur" }
+    case_temp_2:         { address: 111, type: input, scale: 0.01, unit: "°C", description: "Diskkjøler 2 lufttemperatur" }
+    suction_pressure:    { address: 120, type: input, scale: 0.01, unit: "bar", description: "Sug-trykk fellesrør" }
+    discharge_pressure:  { address: 121, type: input, scale: 0.01, unit: "bar", description: "Trykkside fellesrør" }
+    liquid_temp:         { address: 122, type: input, scale: 0.01, unit: "°C", description: "Væskeledning temperatur" }
+    condensing_temp:     { address: 123, type: input, scale: 0.01, unit: "°C", description: "Kondenseringstemperatur" }
+    total_power_kw:      { address: 130, type: input, scale: 0.1,  unit: "kW", description: "Total effekt hele anlegget" }
+    compressor1_run:     { address: 200, type: coil,  description: "Kompressor 1 kjørende" }
+    compressor2_run:     { address: 201, type: coil,  description: "Kompressor 2 kjørende" }
+    compressor3_run:     { address: 202, type: coil,  description: "Kompressor 3 kjørende" }
+    condenser_fan_run:   { address: 210, type: coil,  description: "Kondensatorvifte kjørende" }
+    defrost_active:      { address: 220, type: coil,  description: "Avriming aktiv" }
+    alarm_count:         { address: 300, type: input, scale: 1, description: "Antall aktive alarmer" }
+    alarm_code_1:        { address: 301, type: input, scale: 1, description: "Alarmkode 1" }
+    alarm_code_2:        { address: 302, type: input, scale: 1, description: "Alarmkode 2" }
+    suction_SP:          { address: 400, type: holding, scale: 0.01, unit: "bar", writable: true, description: "Sugtrykk-setpunkt" }
+    condensing_SP:       { address: 401, type: holding, scale: 0.01, unit: "°C",  writable: true, description: "Kondenseringstemperatur-setpunkt" }
+
+# ── Danfoss ECL Comfort 210/310 — varme-/kjølestyring ────────────────────────
+# Referanse: Danfoss "ECL Comfort 210/310 Modbus" VDIMB102
+ECL_Comfort:
+  description: "Danfoss ECL Comfort 210/310 varmekurve-regulering"
+  baud: 19200
+  parity: E
+  stopbits: 1
+
+  registers:
+    outdoor_temp:        { address: 1,   type: input,   scale: 0.1, unit: "°C",  description: "Utetemperatur" }
+    flow_temp:           { address: 2,   type: input,   scale: 0.1, unit: "°C",  description: "Fremløpstemperatur" }
+    return_temp:         { address: 3,   type: input,   scale: 0.1, unit: "°C",  description: "Returtemperatur" }
+    room_temp:           { address: 4,   type: input,   scale: 0.1, unit: "°C",  description: "Romtemperatur" }
+    DHW_temp:            { address: 5,   type: input,   scale: 0.1, unit: "°C",  description: "Varmtvann temperatur" }
+    flow_temp_SP:        { address: 10,  type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Beregnet fremløpstemperatur" }
+    room_temp_SP:        { address: 11,  type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Romtemperatur setpunkt" }
+    DHW_SP:              { address: 12,  type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Varmtvann setpunkt" }
+    heat_curve_slope:    { address: 20,  type: holding, scale: 0.01,             writable: true, description: "Varmekurvehelling" }
+    min_flow_temp:       { address: 21,  type: holding, scale: 0.1, unit: "°C",  writable: false, description: "Min fremløpstemperatur" }
+    max_flow_temp:       { address: 22,  type: holding, scale: 0.1, unit: "°C",  writable: false, description: "Maks fremløpstemperatur" }
+    valve_position:      { address: 30,  type: input,   scale: 0.1, unit: "%",   description: "Ventil posisjon (0–100%)" }
+    pump_status:         { address: 31,  type: input,   scale: 1,   description: "Pumpe kjørende" }
+    operation_mode:      { address: 40,  type: holding, scale: 1, writable: true,
+                           description: "0=auto, 1=komfort, 2=ECO, 3=anti-frost, 4=natt" }
+    alarm_code:          { address: 50,  type: input,   scale: 1,   description: "Aktiv alarmkode" }
+
+  alarm_codes:
+    1:  "Fremløp-sensor feil"
+    2:  "Retur-sensor feil"
+    3:  "Utetemperatur-sensor feil"
+    4:  "Romtemperatur-sensor feil"
+    5:  "Varmtvann-sensor feil"
+    6:  "Kommunikasjonstimeout"
+    7:  "Pumpefeil"
+    10: "Høy fremløpstemperatur"
+    11: "Lav fremløpstemperatur — frostsikring"
+
+# ── Danfoss Optyma Plus-kondenserende aggregat ────────────────────────────────
+Optyma_Plus:
+  description: "Danfoss Optyma Plus kondenserende aggregat"
+  baud: 9600
+  parity: N
+  stopbits: 1
+
+  registers:
+    condensing_temp:     { address: 1,  type: input,   scale: 0.1, unit: "°C",  description: "Kondenseringstemperatur" }
+    ambient_temp:        { address: 2,  type: input,   scale: 0.1, unit: "°C",  description: "Omgivelsestemperatur" }
+    discharge_temp:      { address: 3,  type: input,   scale: 0.1, unit: "°C",  description: "Trykkside temperatur" }
+    HP_pressure:         { address: 4,  type: input,   scale: 0.01, unit: "bar", description: "Høytrykk" }
+    LP_pressure:         { address: 5,  type: input,   scale: 0.01, unit: "bar", description: "Lavtrykk" }
+    fan_speed_pct:       { address: 10, type: input,   scale: 0.1, unit: "%",   description: "Kondensatorvifte hastighet" }
+    compressor_status:   { address: 11, type: input,   scale: 1,   description: "0=av, 1=kjørende" }
+    power_kw:            { address: 12, type: input,   scale: 0.01, unit: "kW",  description: "Effektforbruk" }
+    EEV_position:        { address: 13, type: input,   scale: 0.1, unit: "%",   description: "EEV åpning" }
+    HP_alarm:            { address: 20, type: input,   scale: 1,   description: "Høytrykksalarm aktiv" }
+    LP_alarm:            { address: 21, type: input,   scale: 1,   description: "Lavtrykksalarm aktiv" }
+    alarm_code:          { address: 22, type: input,   scale: 1,   description: "Alarmkode" }
+    condensing_SP:       { address: 30, type: holding, scale: 0.1, unit: "°C",  writable: true, description: "Kondenseringstemperatur-setpunkt" }
+    unit_on:             { address: 40, type: holding, scale: 1, writable: true, description: "1=start, 0=stopp" }

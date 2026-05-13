@@ -1,0 +1,145 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# CAREL — Modbus RTU registerdefinisjoner
+# Protokoll: Modbus RTU over RS485, 8N1 eller 8E1, typisk 9600/19200 baud
+# Alle adresser er 0-baserte (legg til 1 for Modbus PDU-adresse om nødvendig)
+# ─────────────────────────────────────────────────────────────────────────────
+
+manufacturer: carel
+
+# ── pCO5+ / pCOe / pCO Sistema ───────────────────────────────────────────────
+# Standard I/O-mapping i Carel pCO Modbus-driver (applikasjonsuavhengig)
+# Referanse: Carel MPCO5x000* +030220810 – "PCO5+ Supervisor Interface"
+pCO5:
+  description: "Carel pCO5+ / pCOe universalkontroller"
+  baud: 19200
+  parity: E
+  stopbits: 1
+  word_order: big_endian
+
+  analog_inputs:         # B1–B14, NTC/PTC/0-10V/4-20mA — input registers
+    B1_probe:            { address: 1,  type: input, scale: 0.1, unit: "°C",  description: "Sonde B1 — typisk sugetemperatur / romtemp" }
+    B2_probe:            { address: 2,  type: input, scale: 0.1, unit: "°C",  description: "Sonde B2 — typisk kondenseringstemperatur" }
+    B3_probe:            { address: 3,  type: input, scale: 0.1, unit: "°C",  description: "Sonde B3 — typisk utendørstemperatur" }
+    B4_probe:            { address: 4,  type: input, scale: 0.1, unit: "°C",  description: "Sonde B4 — tilleggstemperatur" }
+    B5_probe:            { address: 5,  type: input, scale: 0.1, unit: "°C",  description: "Sonde B5" }
+    B6_pressure_HP:      { address: 6,  type: input, scale: 0.1, unit: "bar", description: "Høytrykkstransducer" }
+    B7_pressure_LP:      { address: 7,  type: input, scale: 0.1, unit: "bar", description: "Lavtrykkstransducer" }
+    B8_humidity:         { address: 8,  type: input, scale: 0.1, unit: "%RH", description: "Relativ fuktighet" }
+    B9_CO2:              { address: 9,  type: input, scale: 1,   unit: "ppm", description: "CO2-konsentrasjon" }
+
+  analog_outputs:        # Y1–Y8, 0-10V — input registers (les tilbake)
+    Y1_compressor_speed: { address: 101, type: input, scale: 0.1, unit: "%",  description: "Kompressor-kapasitet / inverter" }
+    Y2_fan_speed:        { address: 102, type: input, scale: 0.1, unit: "%",  description: "Vifte-kapasitet" }
+    Y3_EEV_opening:      { address: 103, type: input, scale: 0.1, unit: "%",  description: "Elektronisk ekspansjonsventil åpning (MPXPRO)" }
+    Y4_heating_valve:    { address: 104, type: input, scale: 0.1, unit: "%",  description: "Varmebatteri-ventil" }
+
+  digital_inputs:        # DI1–DI16 — coils (leses med read_coils)
+    DI1_high_pressure:   { address: 201, type: coil, description: "Høytrykkspressostat" }
+    DI2_low_pressure:    { address: 202, type: coil, description: "Lavtrykkspressostat" }
+    DI3_remote_onoff:    { address: 203, type: coil, description: "Ekstern start/stopp" }
+    DI4_door_switch:     { address: 204, type: coil, description: "Dørbryter / nødstans" }
+    DI5_flow_switch:     { address: 205, type: coil, description: "Vannstrømsbryter" }
+    DI6_defrost_end:     { address: 206, type: coil, description: "Avriming slutt-termostat" }
+
+  digital_outputs:       # DO1–DO16 — coils (leses og skrives)
+    DO1_compressor1:     { address: 301, type: coil, writable: true, description: "Kompressor 1" }
+    DO2_compressor2:     { address: 302, type: coil, writable: true, description: "Kompressor 2" }
+    DO3_fan1:            { address: 303, type: coil, writable: true, description: "Vifte 1" }
+    DO4_reversing_valve: { address: 304, type: coil, writable: true, description: "4-veiventil (kjøl/varmepumpe)" }
+    DO5_defrost:         { address: 305, type: coil, writable: true, description: "Avriming" }
+    DO6_alarm_relay:     { address: 306, type: coil, description: "Alarmrelé" }
+
+  setpoints:             # holding registers — leses og skrives
+    SP1_setpoint:        { address: 401, type: holding, scale: 0.1, unit: "°C",  writable: true,  description: "Setpunkt 1 (hoveddriftstemperatur)" }
+    SP2_setpoint:        { address: 402, type: holding, scale: 0.1, unit: "°C",  writable: true,  description: "Setpunkt 2 (natt/ECO)" }
+    SP_differential:     { address: 403, type: holding, scale: 0.1, unit: "°C",  writable: true,  description: "Differensial" }
+    SP_HP_limit:         { address: 404, type: holding, scale: 0.1, unit: "bar", writable: false, description: "Høytrykksbegrensning" }
+    SP_LP_limit:         { address: 405, type: holding, scale: 0.1, unit: "bar", writable: false, description: "Lavtrykksbegrensning" }
+    unit_enable:         { address: 500, type: holding, scale: 1,   unit: "",    writable: true,  description: "1=ON, 0=OFF" }
+    operation_mode:      { address: 501, type: holding, scale: 1,   unit: "",    writable: true,  description: "0=auto, 1=kjøl, 2=varme, 3=avriming, 4=ECO" }
+
+  status:                # input registers — kun lese
+    alarm_word1:         { address: 600, type: input, scale: 1, description: "Alarmord 1 (bitmask)" }
+    alarm_word2:         { address: 601, type: input, scale: 1, description: "Alarmord 2 (bitmask)" }
+    runtime_compressor1: { address: 602, type: input, scale: 1, unit: "h",   description: "Driftstimer kompressor 1" }
+    runtime_compressor2: { address: 603, type: input, scale: 1, unit: "h",   description: "Driftstimer kompressor 2" }
+    defrost_state:       { address: 604, type: input, scale: 1,              description: "0=ingen, 1=avriming aktiv, 2=drypp-tid" }
+    power_kw:            { address: 605, type: input, scale: 0.01, unit: "kW", description: "Aktiv effekt (hvis energimåler tilkoblet)" }
+
+  alarm_codes:           # bitmask for alarm_word1
+    0x0001: "Høytrykksalarm"
+    0x0002: "Lavtrykksalarm"
+    0x0004: "Høy temperatur kondensering"
+    0x0008: "Lav sugetemperatur / frysing"
+    0x0010: "Temperatursonde B1 feil"
+    0x0020: "Temperatursonde B2 feil"
+    0x0040: "Trykkgiverfeil"
+    0x0080: "Kompressor 1 motorvern"
+    0x0100: "Kompressor 2 motorvern"
+    0x0200: "Vifte motorvern"
+    0x0400: "Lave superheatverdier / LOP"
+    0x0800: "Avriming timeout"
+    0x1000: "EEPROM feil"
+    0x2000: "Kommunikasjonstimeout"
+
+# ── Carel IR33 ────────────────────────────────────────────────────────────────
+# Kompakt termostatregulator for kjøl/frys — Modbus RTU
+# Referanse: Carel +050003795 "IR33 Series Supervisor"
+IR33:
+  description: "Carel IR33 kompakt kjøleregulator"
+  baud: 9600
+  parity: N
+  stopbits: 2
+
+  registers:
+    Pb1_temp:          { address: 1,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 1 — romtemperatur / avdampertemp" }
+    Pb2_temp:          { address: 2,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 2 — defrost / kondensering" }
+    Pb3_temp:          { address: 3,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 3 (hvis montert)" }
+    setpoint:          { address: 11, type: holding,  scale: 0.1, unit: "°C",  writable: true,  description: "Driftssetpunkt" }
+    setpoint_night:    { address: 12, type: holding,  scale: 0.1, unit: "°C",  writable: true,  description: "Nattsetpunkt" }
+    differential:      { address: 13, type: holding,  scale: 0.1, unit: "°C",  writable: false, description: "Differensial" }
+    alarm_high_temp:   { address: 14, type: holding,  scale: 0.1, unit: "°C",  writable: false, description: "Høytemperaturalarm setpunkt" }
+    alarm_low_temp:    { address: 15, type: holding,  scale: 0.1, unit: "°C",  writable: false, description: "Lavtemperaturalarm setpunkt" }
+    compressor_status: { address: 21, type: input,    scale: 1,   description: "0=av, 1=kompressor på" }
+    defrost_status:    { address: 22, type: input,    scale: 1,   description: "0=av, 1=avriming" }
+    fan_status:        { address: 23, type: input,    scale: 1,   description: "0=av, 1=vifte på" }
+    alarm_status:      { address: 30, type: input,    scale: 1,   description: "Alarm bitmask" }
+    unit_on:           { address: 50, type: holding,  scale: 1,   writable: true, description: "1=ON, 0=OFF" }
+
+  alarm_codes:
+    0x01: "Høy temperatur"
+    0x02: "Lav temperatur"
+    0x04: "Probe 1 feil"
+    0x08: "Probe 2 feil"
+    0x10: "Avriming timeout"
+    0x20: "Dør åpen for lenge"
+
+# ── Carel MPXPRO ─────────────────────────────────────────────────────────────
+# Elektronisk ekspansjonsventildriver — brukes via pCO eller standalone
+# Referanse: Carel +0300055EN "MPX PRO – Modbus"
+MPXPRO:
+  description: "Carel MPXPRO ekspansjonsventildriver"
+  baud: 19200
+  parity: E
+  stopbits: 1
+
+  registers:
+    superheat:         { address: 1,  type: input,  scale: 0.1, unit: "°C",  description: "Supervarme" }
+    evap_temp:         { address: 2,  type: input,  scale: 0.1, unit: "°C",  description: "Fordampningstemperatur" }
+    suction_temp:      { address: 3,  type: input,  scale: 0.1, unit: "°C",  description: "Sugetemperatur" }
+    LP_pressure:       { address: 4,  type: input,  scale: 0.01, unit: "bar", description: "Lavtrykk (fra transducer)" }
+    EEV_position:      { address: 5,  type: input,  scale: 0.1, unit: "%",   description: "Ventilåpning" }
+    EEV_steps:         { address: 6,  type: input,  scale: 1,   unit: "steg", description: "Motorsteg (0–480)" }
+    SH_setpoint:       { address: 11, type: holding, scale: 0.1, unit: "°C",  writable: true,  description: "Superheat-setpunkt" }
+    MOP_setpoint:      { address: 12, type: holding, scale: 0.1, unit: "°C",  writable: true,  description: "Maks fordampningstrykk (MOP)" }
+    LOP_setpoint:      { address: 13, type: holding, scale: 0.1, unit: "°C",  writable: true,  description: "Min fordampningstrykk (LOP)" }
+    alarm_code:        { address: 20, type: input,  scale: 1,   description: "Alarmkode" }
+    status_word:       { address: 21, type: input,  scale: 1,   description: "Statusord bitmask" }
+
+  alarm_codes:
+    1: "Lavt superheat / LOP"
+    2: "Høyt superheat / MOP"
+    3: "Transducer feil"
+    4: "Sondekommunikasjon feil"
+    5: "Ventilmotor feil"
+    6: "EEPROM feil"

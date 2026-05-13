@@ -1,0 +1,154 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ELIWELL (Schneider Electric) — Modbus RTU registerdefinisjoner
+# Protokoll: Modbus RTU over RS485, 9600 eller 19200 8N1
+# Referanse: Eliwell "Modbus Communication Protocol" dok. EW189071
+# ─────────────────────────────────────────────────────────────────────────────
+
+manufacturer: eliwell
+
+# ── EWCM 4120 / 4140 — multi-kompressor kjølestyring ─────────────────────────
+# Brukes i supermarkeder, kjølerom og industrikjøling
+# Referanse: Eliwell cod. EW189015 "EWCM 4120 Modbus"
+EWCM_4120:
+  description: "Eliwell EWCM 4120/4140 multi-kompressor kjølestyring"
+  baud: 19200
+  parity: N
+  stopbits: 1
+  word_order: big_endian
+
+  temperatures:
+    probe_S1:            { address: 1,  type: input,  scale: 0.1, unit: "°C",  description: "Probe S1 — rom/avdamper 1" }
+    probe_S2:            { address: 2,  type: input,  scale: 0.1, unit: "°C",  description: "Probe S2 — rom/avdamper 2" }
+    probe_S3:            { address: 3,  type: input,  scale: 0.1, unit: "°C",  description: "Probe S3 — defrost/suging" }
+    probe_S4:            { address: 4,  type: input,  scale: 0.1, unit: "°C",  description: "Probe S4 — kondensering" }
+    probe_S5:            { address: 5,  type: input,  scale: 0.1, unit: "°C",  description: "Probe S5 — utvendig" }
+    probe_S6_pressure:   { address: 6,  type: input,  scale: 0.01, unit: "bar", description: "Probe S6 — trykkgiver (bar)" }
+    avg_room_temp:       { address: 10, type: input,  scale: 0.1, unit: "°C",  description: "Gjennomsnittstemperatur alle rom" }
+
+  compressors:
+    compressor1_on:      { address: 100, type: input,  scale: 1, description: "Kompressor 1 status (0=av, 1=på)" }
+    compressor2_on:      { address: 101, type: input,  scale: 1, description: "Kompressor 2 status" }
+    compressor3_on:      { address: 102, type: input,  scale: 1, description: "Kompressor 3 status" }
+    compressor4_on:      { address: 103, type: input,  scale: 1, description: "Kompressor 4 status" }
+    capacity_steps:      { address: 110, type: input,  scale: 1, unit: "trinn", description: "Aktive kapasitetstrinn" }
+    suction_pressure:    { address: 111, type: input,  scale: 0.01, unit: "bar", description: "Sugetrykk fellesrør" }
+    suction_temp:        { address: 112, type: input,  scale: 0.1, unit: "°C",  description: "Sugetemperatur" }
+    comp1_runtime_h:     { address: 120, type: input,  scale: 1, unit: "h",   description: "Driftstimer kompressor 1" }
+    comp2_runtime_h:     { address: 121, type: input,  scale: 1, unit: "h",   description: "Driftstimer kompressor 2" }
+    comp3_runtime_h:     { address: 122, type: input,  scale: 1, unit: "h",   description: "Driftstimer kompressor 3" }
+
+  defrost:
+    defrost_active:      { address: 200, type: input, scale: 1, description: "Avriming aktiv" }
+    defrost_temp:        { address: 201, type: input, scale: 0.1, unit: "°C", description: "Avrimingstemperatur" }
+    last_defrost_h:      { address: 202, type: input, scale: 1, unit: "min", description: "Siste avrimingstid (min)" }
+
+  energy:
+    power_kw:            { address: 300, type: input, scale: 0.01, unit: "kW",  description: "Aktiv effekt (kW)" }
+    energy_kwh:          { address: 301, type: input, scale: 1,    unit: "kWh", description: "Energiteller" }
+
+  alarms:
+    alarm_count:         { address: 400, type: input, scale: 1, description: "Antall aktive alarmer" }
+    alarm_word1:         { address: 401, type: input, scale: 1, description: "Alarmbitmask 1" }
+    alarm_word2:         { address: 402, type: input, scale: 1, description: "Alarmbitmask 2" }
+    HP_alarm:            { address: 410, type: input, scale: 1, description: "Høytrykkspressostat utløst" }
+    LP_alarm:            { address: 411, type: input, scale: 1, description: "Lavtrykkspressostat utløst" }
+    probe_fault:         { address: 412, type: input, scale: 1, description: "Probefeil bitmask" }
+
+  setpoints:
+    suction_SP:          { address: 500, type: holding, scale: 0.01, unit: "bar", writable: true, description: "Sugetrykk-setpunkt" }
+    room_temp_SP:        { address: 501, type: holding, scale: 0.1,  unit: "°C",  writable: true, description: "Romtemperatur-setpunkt" }
+    condensing_SP:       { address: 502, type: holding, scale: 0.1,  unit: "°C",  writable: true, description: "Kondenseringstemperatur-setpunkt" }
+    night_setback_SP:    { address: 503, type: holding, scale: 0.1,  unit: "°C",  writable: true, description: "Natt-setback setpunkt" }
+    defrost_interval_h:  { address: 504, type: holding, scale: 1,    unit: "h",   writable: true, description: "Avriming-intervall (timer)" }
+    unit_on:             { address: 600, type: holding, scale: 1, writable: true, description: "1=driftsstart, 0=stopp" }
+    operation_mode:      { address: 601, type: holding, scale: 1, writable: true,
+                           description: "0=auto, 1=manuell, 2=natt, 3=anti-frost" }
+
+  alarm_bits_word1:
+    0x0001: "Kompressor 1 motorvern"
+    0x0002: "Kompressor 2 motorvern"
+    0x0004: "Kompressor 3 motorvern"
+    0x0008: "Høytrykksalarm"
+    0x0010: "Lavtrykksalarm"
+    0x0020: "Høy kondenseringstemp"
+    0x0040: "Lav sugetemperatur"
+    0x0080: "Olje-nivåalarm"
+    0x0100: "Probe S1 feil"
+    0x0200: "Probe S2 feil"
+    0x0400: "Probe S3 feil"
+    0x0800: "Trykkgiver feil"
+    0x1000: "Avriming timeout"
+    0x2000: "Kommunikasjonstimeout"
+    0x4000: "EEPROM feil"
+    0x8000: "Nødstans aktivert"
+
+# ── Eliwell IC915 / IC902 — kjøledisskontroller ───────────────────────────────
+# Referanse: Eliwell "IC900 Series Modbus" EW189024
+IC915:
+  description: "Eliwell IC915/IC902 kjøledisk-kontroller"
+  baud: 9600
+  parity: N
+  stopbits: 1
+
+  registers:
+    Pb1_room_temp:       { address: 1,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 1 — romtemperatur" }
+    Pb2_evap_temp:       { address: 2,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 2 — fordamper/defrost" }
+    Pb3_aux:             { address: 3,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 3 — tillegg" }
+    setpoint:            { address: 10, type: holding,  scale: 0.1, unit: "°C",  writable: true,  description: "Temperatur-setpunkt" }
+    differential:        { address: 11, type: holding,  scale: 0.1, unit: "°C",  writable: false, description: "Differensial" }
+    high_temp_alarm:     { address: 12, type: holding,  scale: 0.1, unit: "°C",  writable: false, description: "Høy-temp alarmgrense" }
+    low_temp_alarm:      { address: 13, type: holding,  scale: 0.1, unit: "°C",  writable: false, description: "Lav-temp alarmgrense" }
+    defrost_SP:          { address: 14, type: holding,  scale: 0.1, unit: "°C",  writable: true,  description: "Avrimings-avslutningstemperatur" }
+    defrost_interval:    { address: 15, type: holding,  scale: 1,   unit: "h",   writable: true,  description: "Avrimingsintervall" }
+    compressor_status:   { address: 20, type: input,    scale: 1,   description: "Kompressor-status" }
+    defrost_status:      { address: 21, type: input,    scale: 1,   description: "Avrimingsstatus" }
+    fan_status:          { address: 22, type: input,    scale: 1,   description: "Vifte-status" }
+    alarm_status:        { address: 30, type: input,    scale: 1,   description: "Alarm-bitmask" }
+    unit_on:             { address: 40, type: holding,  scale: 1, writable: true }
+
+  alarm_codes:
+    0x01: "Høy temperatur (SD)"
+    0x02: "Lav temperatur (SD)"
+    0x04: "Probe 1 feil"
+    0x08: "Probe 2 feil"
+    0x10: "Avriming timeout"
+    0x20: "Dør åpen"
+    0x40: "Ekstern alarm"
+
+# ── Eliwell EWDR 974 — avriming-/display-kontroller ──────────────────────────
+EWDR_974:
+  description: "Eliwell EWDR 974 kjøl/frys display-kontroller"
+  baud: 9600
+  parity: N
+  stopbits: 1
+
+  registers:
+    room_temp:           { address: 1,  type: input,   scale: 0.1, unit: "°C" }
+    evap_temp:           { address: 2,  type: input,   scale: 0.1, unit: "°C" }
+    setpoint:            { address: 10, type: holding,  scale: 0.1, unit: "°C", writable: true }
+    setpoint_night:      { address: 11, type: holding,  scale: 0.1, unit: "°C", writable: true }
+    compressor_on:       { address: 20, type: input,    scale: 1 }
+    defrost_on:          { address: 21, type: input,    scale: 1 }
+    fan_on:              { address: 22, type: input,    scale: 1 }
+    alarm_word:          { address: 30, type: input,    scale: 1 }
+    unit_on:             { address: 40, type: holding,  scale: 1, writable: true }
+
+# ── Eliwell ID961 LX — universalkontroller ────────────────────────────────────
+ID961LX:
+  description: "Eliwell ID961 LX universalkontroller (kjøl/varme)"
+  baud: 19200
+  parity: N
+  stopbits: 1
+
+  registers:
+    probe1:              { address: 1,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 1 — reguleringstemperatur" }
+    probe2:              { address: 2,  type: input,   scale: 0.1, unit: "°C",  description: "Probe 2 — tilleggsprobe" }
+    setpoint:            { address: 10, type: holding,  scale: 0.1, unit: "°C",  writable: true }
+    setpoint_2:          { address: 11, type: holding,  scale: 0.1, unit: "°C",  writable: true, description: "Setpunkt 2 (natt/2. sone)" }
+    differential:        { address: 12, type: holding,  scale: 0.1, unit: "°C",  writable: false }
+    output1_status:      { address: 20, type: input,    scale: 1,   description: "Relé 1 (kjøl/varme)" }
+    output2_status:      { address: 21, type: input,    scale: 1,   description: "Relé 2" }
+    alarm_word:          { address: 30, type: input,    scale: 1 }
+    unit_on:             { address: 40, type: holding,  scale: 1, writable: true }
+    operation_mode:      { address: 41, type: holding,  scale: 1, writable: true,
+                           description: "0=kjøling, 1=varme, 2=auto" }

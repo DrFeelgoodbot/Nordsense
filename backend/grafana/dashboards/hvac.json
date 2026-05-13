@@ -1,0 +1,134 @@
+{
+  "title": "HVAC Energioptimalisering",
+  "uid": "hvac-main",
+  "timezone": "Europe/Oslo",
+  "refresh": "1m",
+  "time": { "from": "now-24h", "to": "now" },
+  "panels": [
+    {
+      "id": 1, "gridPos": { "x": 0, "y": 0, "w": 24, "h": 3 },
+      "type": "stat", "title": "Nord Pool strømpris nå (kr/kWh)",
+      "options": { "colorMode": "background", "graphMode": "area" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyNOK",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "red", "value": 1.2 }
+            ]
+          }
+        }
+      },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -2h)\n  |> filter(fn: (r) => r._measurement == \"nordpool_price\")\n  |> last()"
+      }]
+    },
+    {
+      "id": 2, "gridPos": { "x": 0, "y": 3, "w": 24, "h": 8 },
+      "type": "timeseries", "title": "Nord Pool priser — i dag og i morgen",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyNOK",
+          "custom": { "fillOpacity": 20 },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.5 },
+              { "color": "red", "value": 1.2 }
+            ]
+          },
+          "color": { "mode": "thresholds" }
+        }
+      },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -2d)\n  |> filter(fn: (r) => r._measurement == \"nordpool_price\")"
+      }]
+    },
+    {
+      "id": 3, "gridPos": { "x": 0, "y": 11, "w": 12, "h": 8 },
+      "type": "timeseries", "title": "Varmepumper — effektforbruk (kW)",
+      "fieldConfig": { "defaults": { "unit": "kwatth" } },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_telemetry\" and r.device_type == \"heat_pump\" and r._field == \"power_kw\")"
+      }]
+    },
+    {
+      "id": 4, "gridPos": { "x": 12, "y": 11, "w": 12, "h": 8 },
+      "type": "timeseries", "title": "Kjøleanlegg — effektforbruk (kW)",
+      "fieldConfig": { "defaults": { "unit": "kwatth" } },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_telemetry\" and r.device_type == \"cooling\" and r._field == \"power_kw\")"
+      }]
+    },
+    {
+      "id": 5, "gridPos": { "x": 0, "y": 19, "w": 12, "h": 8 },
+      "type": "timeseries", "title": "Temperaturer — inn/ut (°C)",
+      "fieldConfig": { "defaults": { "unit": "celsius" } },
+      "targets": [
+        {
+          "refId": "A",
+          "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_telemetry\" and r._field == \"inlet_temp\")"
+        },
+        {
+          "refId": "B",
+          "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_telemetry\" and r._field == \"outlet_temp\")"
+        }
+      ]
+    },
+    {
+      "id": 6, "gridPos": { "x": 12, "y": 19, "w": 12, "h": 8 },
+      "type": "timeseries", "title": "Setpunkter — optimalisert av Nord Pool",
+      "fieldConfig": { "defaults": { "unit": "celsius" } },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_telemetry\" and r._field == \"setpoint\")"
+      }]
+    },
+    {
+      "id": 7, "gridPos": { "x": 0, "y": 27, "w": 12, "h": 8 },
+      "type": "timeseries", "title": "COP — varmepumper",
+      "fieldConfig": { "defaults": { "unit": "none", "min": 0 } },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_telemetry\" and r._field == \"cop\")"
+      }]
+    },
+    {
+      "id": 8, "gridPos": { "x": 12, "y": 27, "w": 12, "h": 8 },
+      "type": "timeseries", "title": "Estimert besparelse per optimeringskjøring (kWh)",
+      "fieldConfig": { "defaults": { "unit": "kwatth" } },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_optimization\" and r._field == \"estimated_saving_kwh\")"
+      }]
+    },
+    {
+      "id": 9, "gridPos": { "x": 0, "y": 35, "w": 24, "h": 8 },
+      "type": "table", "title": "Aktive alarmer og feilmeldinger",
+      "options": { "sortBy": [{ "displayName": "Tid", "desc": true }] },
+      "fieldConfig": {
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "severity" },
+            "properties": [{ "id": "custom.displayMode", "value": "color-background" },
+              { "id": "thresholds", "value": { "mode": "absolute", "steps": [
+                { "color": "blue", "value": null },
+                { "color": "yellow", "value": 1 },
+                { "color": "red", "value": 2 }
+              ]}}]}
+        ]
+      },
+      "targets": [{
+        "refId": "A",
+        "query": "from(bucket: \"hvac_data\")\n  |> range(start: -24h)\n  |> filter(fn: (r) => r._measurement == \"hvac_alarm\")\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> sort(columns: [\"_time\"], desc: true)\n  |> limit(n: 50)"
+      }]
+    }
+  ]
+}

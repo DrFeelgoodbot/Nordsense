@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { @apply font-sans antialiased text-slate-800; }
+  * { box-sizing: border-box; }
+}
+
+@layer components {
+  .card { @apply bg-white rounded-2xl border border-slate-100 shadow-sm; }
+  .card-header { @apply px-6 pt-5 pb-3 flex items-center justify-between; }
+  .card-title { @apply text-sm font-semibold text-slate-500 uppercase tracking-wide; }
+  .kpi-value { @apply text-3xl font-bold text-slate-900 tabular-nums; }
+  .kpi-delta-up { @apply text-xs font-medium text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full; }
+  .kpi-delta-down { @apply text-xs font-medium text-red-500 bg-red-50 px-2 py-0.5 rounded-full; }
+  .badge-ok { @apply text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full; }
+  .badge-warn { @apply text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full; }
+  .badge-crit { @apply text-xs font-medium text-red-700 bg-red-50 border border-red-200 px-2.5 py-0.5 rounded-full; }
+  .nav-item { @apply flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-500 hover:bg-brand-50 hover:text-brand-700 transition-colors cursor-pointer; }
+  .nav-item-active { @apply bg-brand-600 text-white hover:bg-brand-600 hover:text-white; }
+  .table-row { @apply border-t border-slate-100 hover:bg-slate-50 transition-colors; }
+}

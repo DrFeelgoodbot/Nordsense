@@ -1,0 +1,88 @@
+modbus:
+  port: /dev/ttyS0        # RS485 port på RPi
+  baudrate: 19200
+  parity: E
+  stopbits: 1
+  timeout: 1.0
+
+  devices:
+    - id: heat_pump_1
+      name: "Varmepumpe 1"
+      slave_address: 1
+      type: heat_pump
+      registers:
+        inlet_temp:       { address: 100, type: input, scale: 0.1, unit: "°C" }
+        outlet_temp:      { address: 101, type: input, scale: 0.1, unit: "°C" }
+        outdoor_temp:     { address: 102, type: input, scale: 0.1, unit: "°C" }
+        power_kw:         { address: 103, type: input, scale: 0.1, unit: "kW" }
+        cop:              { address: 104, type: input, scale: 0.01, unit: "" }
+        setpoint:         { address: 200, type: holding, scale: 0.1, unit: "°C", writable: true }
+        compressor_hz:    { address: 105, type: input, scale: 0.1, unit: "Hz" }
+        alarm_code:       { address: 106, type: input, scale: 1, unit: "" }
+        enabled:          { address: 201, type: holding, scale: 1, unit: "", writable: true }
+
+    - id: heat_pump_2
+      name: "Varmepumpe 2"
+      slave_address: 2
+      type: heat_pump
+      registers:
+        inlet_temp:       { address: 100, type: input, scale: 0.1, unit: "°C" }
+        outlet_temp:      { address: 101, type: input, scale: 0.1, unit: "°C" }
+        outdoor_temp:     { address: 102, type: input, scale: 0.1, unit: "°C" }
+        power_kw:         { address: 103, type: input, scale: 0.1, unit: "kW" }
+        cop:              { address: 104, type: input, scale: 0.01, unit: "" }
+        setpoint:         { address: 200, type: holding, scale: 0.1, unit: "°C", writable: true }
+        compressor_hz:    { address: 105, type: input, scale: 0.1, unit: "Hz" }
+        alarm_code:       { address: 106, type: input, scale: 1, unit: "" }
+        enabled:          { address: 201, type: holding, scale: 1, unit: "", writable: true }
+
+    - id: cooling_1
+      name: "Kjøleanlegg 1"
+      slave_address: 3
+      type: cooling
+      registers:
+        supply_temp:      { address: 100, type: input, scale: 0.1, unit: "°C" }
+        return_temp:      { address: 101, type: input, scale: 0.1, unit: "°C" }
+        power_kw:         { address: 102, type: input, scale: 0.1, unit: "kW" }
+        setpoint:         { address: 200, type: holding, scale: 0.1, unit: "°C", writable: true }
+        compressor_status:{ address: 103, type: input, scale: 1, unit: "" }
+        alarm_code:       { address: 104, type: input, scale: 1, unit: "" }
+        enabled:          { address: 201, type: holding, scale: 1, unit: "", writable: true }
+
+can:
+  channel: can0
+  bustype: socketcan
+  bitrate: 250000
+
+  fault_ids:              # CAN message IDs med feilmeldinger
+    - 0x100
+    - 0x101
+    - 0x200
+
+mqtt:
+  broker: "your-backend-ip"
+  port: 1883
+  client_id: "hvac-edge-01"
+  username: "hvac"
+  password: "changeme"
+  topics:
+    telemetry: "hvac/{device_id}/telemetry"
+    alarms:    "hvac/{device_id}/alarm"
+    commands:  "hvac/+/command"
+    prices:    "nordpool/prices"
+
+optimizer:
+  price_threshold_low: 0.50   # kr/kWh — billig strøm, prekjøl/forvarm
+  price_threshold_high: 1.20  # kr/kWh — dyr strøm, reduser
+  comfort:
+    heat_setpoint_min: 18.0
+    heat_setpoint_max: 24.0
+    cool_setpoint_min: 18.0
+    cool_setpoint_max: 26.0
+  preheat_delta: 2.0          # °C ekstra setpunkt ved billig strøm
+  precool_delta: -2.0         # °C reduksjon ved billig strøm (kjøl ned mer)
+  area: "NO1"                 # Nord Pool prisområde (NO1-NO5)
+
+logging:
+  level: INFO
+  file: /var/log/hvac-optimizer/edge.log
