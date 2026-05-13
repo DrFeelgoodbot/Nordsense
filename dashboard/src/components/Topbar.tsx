@@ -17,7 +17,7 @@ const titles: Record<string, string> = {
 
 export function Topbar({ page, lastUpdated }: { page: string; lastUpdated: Date }) {
   return (
-    <header className="h-16 bg-white border-b border-slate-100 flex items-center px-6 gap-4 sticky top-0 z-10">
+    <header className="h-16 bg-white border-b border-slate-100 flex items-center px-6 gap-4 sticky top-9 z-10">
       <div className="flex-1">
         <h1 className="text-base font-semibold text-slate-800">{titles[page]}</h1>
         <p className="text-xs text-slate-400">
