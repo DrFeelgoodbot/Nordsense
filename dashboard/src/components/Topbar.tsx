@@ -11,6 +11,8 @@ const titles: Record<string, string> = {
   canbus:       'CAN-bus monitor',
   settings:     'Innstillinger',
   contact:      'Kontakt / Få tilbud',
+  about:        'Om NordSense',
+  privacy:      'Personvernerklæring',
 }
 
 export function Topbar({ page, lastUpdated }: { page: string; lastUpdated: Date }) {
