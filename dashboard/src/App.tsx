@@ -126,8 +126,18 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+      {/* Demo banner */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-brand-600 text-white text-center py-2 px-4 text-sm flex items-center justify-center gap-4">
+        <span>🚀 <strong>Dette er en demo</strong> — Se hvordan NordSense optimaliserer energikostnadene dine i sanntid.</span>
+        <a
+          href="mailto:stiskjer@gmail.com?subject=Tilbud NordSense energioptimalisering"
+          className="bg-white text-brand-700 font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-brand-50 transition-colors whitespace-nowrap"
+        >
+          Kontakt for tilbud →
+        </a>
+      </div>
       <Sidebar page={page} setPage={setPage} />
-      <div className="ml-64 flex flex-col min-h-screen">
+      <div className="ml-64 flex flex-col min-h-screen pt-9">
         <Topbar page={page} lastUpdated={lastUpdated} />
         <main className="flex-1 p-6">
           {page === 'overview'      && <Overview setPage={setPage} />}
