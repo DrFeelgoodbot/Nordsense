@@ -22,7 +22,7 @@ export function Sidebar({ page, setPage }: { page: string; setPage: (p: string) 
           </div>
           <div>
             <div className="text-sm font-bold text-slate-900 leading-tight">OptiSense</div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-widest leading-tight">HVAC Platform</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-widest leading-tight">Energioptimalisering</div>
           </div>
         </div>
       </div>
