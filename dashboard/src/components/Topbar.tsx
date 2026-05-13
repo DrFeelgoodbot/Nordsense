@@ -10,6 +10,7 @@ const titles: Record<string, string> = {
   alarms:       'Alarmer',
   canbus:       'CAN-bus monitor',
   settings:     'Innstillinger',
+  contact:      'Kontakt / Få tilbud',
 }
 
 export function Topbar({ page, lastUpdated }: { page: string; lastUpdated: Date }) {

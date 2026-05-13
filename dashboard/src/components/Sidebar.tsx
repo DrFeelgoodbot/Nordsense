@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Zap, BellRing, Settings, TrendingDown, ChevronRight, Network } from 'lucide-react'
+import { LayoutDashboard, Building2, Zap, BellRing, Settings, TrendingDown, ChevronRight, Network, Mail } from 'lucide-react'
 import clsx from 'clsx'
 
 const nav = [
@@ -9,6 +9,7 @@ const nav = [
   { id: 'alarms',         icon: BellRing,         label: 'Alarmer', badge: 2 },
   { id: 'canbus',         icon: Network,          label: 'CAN-bus', badge: 3 },
   { id: 'settings',       icon: Settings,         label: 'Innstillinger' },
+  { id: 'contact',        icon: Mail,             label: 'Kontakt / Tilbud' },
 ]
 
 export function Sidebar({ page, setPage }: { page: string; setPage: (p: string) => void }) {

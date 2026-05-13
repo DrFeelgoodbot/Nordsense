@@ -10,6 +10,7 @@ import { AlarmTable } from './components/AlarmTable'
 import { DeviceTable } from './components/DeviceTable'
 import { OptimizationLog } from './components/OptimizationLog'
 import { CanDashboard } from './components/CanDashboard'
+import { ContactForm } from './components/ContactForm'
 import { kpis, currentPrice } from './lib/mockData'
 import {
   Zap, Building2, TrendingDown, BellRing, Cpu, BarChart3, ThermometerSun
@@ -157,6 +158,7 @@ export default function App() {
               <p className="text-sm">Innstillinger — kommer snart</p>
             </div>
           )}
+          {page === 'contact'       && <ContactForm />}
         </main>
         <footer className="px-6 py-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
           <span>NordSense HVAC Platform v1.0</span>

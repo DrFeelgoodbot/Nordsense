@@ -9,6 +9,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="bg-slate-50">
+    <!-- Netlify Forms detection -->
+    <form name="kontakt" netlify netlify-honeypot="bot-field" hidden>
+      <input name="name" /><input name="company" /><input name="phone" />
+      <input name="email" /><input name="buildings" /><textarea name="message"></textarea>
+    </form>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
