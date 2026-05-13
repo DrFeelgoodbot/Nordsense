@@ -130,10 +130,16 @@ export default function App() {
       <div className="fixed top-0 left-0 right-0 z-50 bg-brand-600 text-white text-center py-2 px-4 text-sm flex items-center justify-center gap-4">
         <span>🚀 <strong>Dette er en demo</strong> — Se hvordan NordSense optimaliserer energikostnadene dine i sanntid.</span>
         <a
-          href="mailto:stiskjer@gmail.com?subject=Tilbud NordSense energioptimalisering"
+          href="tel:+4791375775"
           className="bg-white text-brand-700 font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-brand-50 transition-colors whitespace-nowrap"
         >
-          Kontakt for tilbud →
+          📞 913 75 775
+        </a>
+        <a
+          href="mailto:stiskjer@gmail.com?subject=Tilbud NordSense energioptimalisering"
+          className="bg-white/20 text-white font-semibold px-3 py-0.5 rounded-full text-xs hover:bg-white/30 transition-colors whitespace-nowrap"
+        >
+          E-post →
         </a>
       </div>
       <Sidebar page={page} setPage={setPage} />
