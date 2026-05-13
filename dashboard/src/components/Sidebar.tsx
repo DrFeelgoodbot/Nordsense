@@ -15,7 +15,7 @@ const nav = [
 
 export function Sidebar({ page, setPage }: { page: string; setPage: (p: string) => void }) {
   return (
-    <aside className="fixed top-9 bottom-0 left-0 w-64 bg-white border-r border-slate-100 flex flex-col z-20">
+    <aside className="w-64 h-full bg-white border-r border-slate-100 flex flex-col">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-slate-100">
         <div className="flex items-center gap-2.5">

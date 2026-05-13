@@ -159,7 +159,7 @@ export default function App() {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed top-9 bottom-0 left-0 z-40 transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+      <div className={`fixed top-9 bottom-0 left-0 z-40 w-64 transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <Sidebar page={page} setPage={navigate} />
       </div>
 
