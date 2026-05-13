@@ -143,7 +143,7 @@ export default function App() {
           )}
         </main>
         <footer className="px-6 py-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
-          <span>OptiSense HVAC Platform v1.0</span>
+          <span>NordSense HVAC Platform v1.0</span>
           <span>Data oppdateres hvert 60. sek · Nord Pool NO1</span>
         </footer>
       </div>
