@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Phone, Mail, Building2, User, MessageSquare, CheckCircle2, Send } from 'lucide-react'
 
-export function ContactForm() {
+export function ContactForm({ onPrivacy }: { onPrivacy?: () => void }) {
   const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [consent, setConsent] = useState(false)
   const [form, setForm] = useState({
     name: '',
     company: '',
@@ -201,10 +202,33 @@ export function ContactForm() {
           />
         </div>
 
+        {/* GDPR-samtykke */}
+        <div className="flex items-start gap-3 p-4 bg-slate-50 rounded-xl border border-slate-200">
+          <input
+            type="checkbox"
+            id="consent"
+            required
+            checked={consent}
+            onChange={e => setConsent(e.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-400 cursor-pointer"
+          />
+          <label htmlFor="consent" className="text-xs text-slate-500 leading-relaxed cursor-pointer">
+            Jeg godtar at NordSense lagrer mine opplysninger for å behandle denne henvendelsen, i henhold til{' '}
+            <button
+              type="button"
+              onClick={onPrivacy}
+              className="text-brand-600 hover:underline font-medium"
+            >
+              personvernerklæringen
+            </button>
+            . Samtykket kan trekkes tilbake når som helst.
+          </label>
+        </div>
+
         <button
           type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+          disabled={loading || !consent}
+          className="w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm"
         >
           {loading ? (
             <span>Sender...</span>

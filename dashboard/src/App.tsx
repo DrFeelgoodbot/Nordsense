@@ -11,6 +11,7 @@ import { DeviceTable } from './components/DeviceTable'
 import { OptimizationLog } from './components/OptimizationLog'
 import { CanDashboard } from './components/CanDashboard'
 import { ContactForm } from './components/ContactForm'
+import { PrivacyPolicy } from './components/PrivacyPolicy'
 import { kpis, currentPrice } from './lib/mockData'
 import {
   Zap, Building2, TrendingDown, BellRing, Cpu, BarChart3, ThermometerSun
@@ -158,11 +159,15 @@ export default function App() {
               <p className="text-sm">Innstillinger — kommer snart</p>
             </div>
           )}
-          {page === 'contact'       && <ContactForm />}
+          {page === 'contact'       && <ContactForm onPrivacy={() => setPage('privacy')} />}
+          {page === 'privacy'       && <PrivacyPolicy />}
         </main>
         <footer className="px-6 py-3 border-t border-slate-100 text-xs text-slate-400 flex items-center justify-between">
           <span>NordSense HVAC Platform v1.0</span>
-          <span>Data oppdateres hvert 60. sek · Nord Pool NO1</span>
+          <div className="flex items-center gap-4">
+            <button onClick={() => setPage('privacy')} className="hover:text-brand-600 transition-colors">Personvern</button>
+            <span>Data oppdateres hvert 60. sek · Nord Pool NO1</span>
+          </div>
         </footer>
       </div>
     </div>
