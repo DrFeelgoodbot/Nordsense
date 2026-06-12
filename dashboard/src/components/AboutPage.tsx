@@ -101,7 +101,7 @@ export function AboutPage() {
           <div className="text-xs text-slate-400">Aktiv utvikling · Demo tilgjengelig · Pilotinstallasjon planlegges</div>
         </div>
         <a
-          href="https://github.com/DrFeelgoodbot/Optisense"
+          href="https://github.com/DrFeelgoodbot/Nordsense"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 text-xs font-semibold text-slate-600 hover:text-brand-600 transition-colors bg-slate-50 px-3 py-2 rounded-xl border border-slate-200"
