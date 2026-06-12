@@ -11,7 +11,10 @@ export function BuildingGrid({ onSelect }: { onSelect: (id: string) => void }) {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-title">Bygningsportefølje</span>
+        <span className="card-title flex items-center gap-2">
+          Bygningsportefølje
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-200 px-1.5 py-0.5 rounded">Demo</span>
+        </span>
         <span className="text-xs text-slate-400">{buildings.length} bygg</span>
       </div>
       <div className="overflow-x-auto">

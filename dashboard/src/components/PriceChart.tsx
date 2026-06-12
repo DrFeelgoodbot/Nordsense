@@ -2,7 +2,7 @@ import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, ReferenceLine, Cell, Legend
 } from 'recharts'
-import { nordpoolPrices, currentPrice } from '../lib/mockData'
+import { useNordpoolPrices } from '../lib/useNordpoolPrices'
 
 const LOW  = 0.50
 const HIGH = 1.20
@@ -33,11 +33,15 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function PriceChart() {
   const now = new Date().getHours()
+  const { prices, live } = useNordpoolPrices('NO1')
 
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-title">Nord Pool — timespris i dag (kr/kWh)</span>
+        <span className="card-title">
+          Nord Pool — timespris i dag (kr/kWh)
+          {live && <span className="ml-2 inline-flex items-center gap-1 text-[11px] font-medium text-emerald-600"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />Live NO1</span>}
+        </span>
         <div className="flex items-center gap-3 text-xs text-slate-500">
           <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block" /> Billig (&lt;0.50)</span>
           <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block" /> Normal</span>
@@ -46,7 +50,7 @@ export function PriceChart() {
       </div>
       <div className="px-6 pb-5">
         <ResponsiveContainer width="100%" height={210}>
-          <ComposedChart data={nordpoolPrices} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
+          <ComposedChart data={prices} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
             <XAxis
               dataKey="hour"
@@ -66,8 +70,8 @@ export function PriceChart() {
             <ReferenceLine y={HIGH} stroke="#ef4444" strokeDasharray="4 4" strokeWidth={1.5} />
             <ReferenceLine x={now} stroke="#0c8de9" strokeWidth={2} label={{ value: 'Nå', position: 'top', fontSize: 11, fill: '#0c8de9' }} />
             <Bar dataKey="price" radius={[4, 4, 0, 0]} maxBarSize={28}>
-              {nordpoolPrices.map((entry, i) => (
-                <Cell key={i} fill={priceColor(entry.price)} fillOpacity={i === now ? 1 : 0.75} />
+              {prices.map((entry, i) => (
+                <Cell key={i} fill={priceColor(entry.price)} fillOpacity={entry.hour === now ? 1 : 0.75} />
               ))}
             </Bar>
           </ComposedChart>

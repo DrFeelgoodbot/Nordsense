@@ -1,0 +1,170 @@
+# NordSense bygnings-portefølje for simulering
+# Matcher dashboardets mockData så det blir konsistent demo.
+
+devices:
+  # ── Storgata 12 (Oslo) ──────────────────────────────────────────────────────
+  - device_id: c-vp1
+    name: Varmepumpe 1
+    building_id: bygg-a
+    manufacturer: Carel
+    model: pCO5
+    type: heat_pump
+    nominal_power_kw: 12.4
+    nominal_cop: 3.8
+  - device_id: c-vp2
+    name: Varmepumpe 2
+    building_id: bygg-a
+    manufacturer: Carel
+    model: pCO5
+    type: heat_pump
+    nominal_power_kw: 11.8
+    nominal_cop: 3.6
+  - device_id: c-kj1
+    name: Kjøleanlegg 1
+    building_id: bygg-a
+    manufacturer: Carel
+    model: pCO5
+    type: cooling
+    nominal_power_kw: 8.2
+    setpoint_c: 4.0
+  - device_id: sa-v1
+    name: Ventilasjon 1
+    building_id: bygg-a
+    manufacturer: System Air
+    model: Topline_SAVE
+    type: ahu
+    nominal_power_kw: 3.1
+
+  # ── Lysaker Atrium (Bærum) ─────────────────────────────────────────────────
+  - device_id: d-dr1
+    name: Pumpe-frekvensomformer 1
+    building_id: bygg-b
+    manufacturer: Danfoss
+    model: FC_drive
+    type: vfd
+    nominal_power_kw: 5.2
+  - device_id: d-dr2
+    name: Vifte-frekvensomformer 1
+    building_id: bygg-b
+    manufacturer: Danfoss
+    model: FC_drive
+    type: vfd
+    nominal_power_kw: 4.8
+  - device_id: d-ecl
+    name: Varmestyring ECL
+    building_id: bygg-b
+    manufacturer: Danfoss
+    model: ECL_Comfort
+    type: heat_control
+  - device_id: sw-g1
+    name: GOLD RX 150
+    building_id: bygg-b
+    manufacturer: Swegon
+    model: GOLD
+    type: ahu
+    nominal_power_kw: 7.4
+  - device_id: sw-g2
+    name: GOLD RX 150 (2)
+    building_id: bygg-b
+    manufacturer: Swegon
+    model: GOLD
+    type: ahu
+    nominal_power_kw: 6.9
+
+  # ── Aker Brygge Tower (Oslo) — har datarom ─────────────────────────────────
+  - device_id: e-ew1
+    name: Kjølerom multi-kompressor
+    building_id: bygg-c
+    manufacturer: Eliwell
+    model: EWCM_4120
+    type: cooling
+    nominal_power_kw: 22.6
+    setpoint_c: -18.0
+  - device_id: c-ir1
+    name: Kjøledisk 1
+    building_id: bygg-c
+    manufacturer: Carel
+    model: IR33
+    type: cooling
+    nominal_power_kw: 1.8
+    setpoint_c: 4.0
+  - device_id: c-ir2
+    name: Kjøledisk 2
+    building_id: bygg-c
+    manufacturer: Carel
+    model: IR33
+    type: cooling
+    nominal_power_kw: 1.6
+    setpoint_c: 4.0
+  - device_id: sw-g3
+    name: GOLD VX 200
+    building_id: bygg-c
+    manufacturer: Swegon
+    model: GOLD
+    type: ahu
+    nominal_power_kw: 14.2
+  - device_id: crac-1
+    name: CRAC enhet 1 (datarom 1)
+    building_id: bygg-c
+    manufacturer: Stulz
+    model: CyberAir_3
+    type: cooling
+    nominal_power_kw: 18.0
+    setpoint_c: 22.0
+  - device_id: crac-2
+    name: CRAC enhet 2 (datarom 2)
+    building_id: bygg-c
+    manufacturer: Stulz
+    model: CyberAir_3
+    type: cooling
+    nominal_power_kw: 18.0
+    setpoint_c: 22.0
+
+  # ── Fornebu Park (Bærum) ───────────────────────────────────────────────────
+  - device_id: e-ic1
+    name: Kjøledisk 1
+    building_id: bygg-d
+    manufacturer: Eliwell
+    model: IC915
+    type: cooling
+    nominal_power_kw: 1.4
+    setpoint_c: 4.0
+  - device_id: d-opt
+    name: Optyma kondenser
+    building_id: bygg-d
+    manufacturer: Danfoss
+    model: Optyma_Plus
+    type: cooling
+    nominal_power_kw: 12.8
+    setpoint_c: 4.0
+  - device_id: sa-v2
+    name: Ventilasjon 1
+    building_id: bygg-d
+    manufacturer: System Air
+    model: Topline_SAVE
+    type: ahu
+    nominal_power_kw: 4.2
+
+  # ── Nydalen Hub (Oslo) ─────────────────────────────────────────────────────
+  - device_id: sa-v3
+    name: SAVE VTR 500
+    building_id: bygg-e
+    manufacturer: System Air
+    model: Topline_SAVE
+    type: ahu
+    nominal_power_kw: 5.8
+  - device_id: c-vp3
+    name: Varmepumpe 1
+    building_id: bygg-e
+    manufacturer: Carel
+    model: pCO5
+    type: heat_pump
+    nominal_power_kw: 18.6
+    nominal_cop: 4.1
+  - device_id: sw-casa
+    name: CASA R (etasje 3)
+    building_id: bygg-e
+    manufacturer: Swegon
+    model: CASA_R
+    type: ahu
+    nominal_power_kw: 0.6

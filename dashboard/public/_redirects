@@ -1,0 +1,2 @@
+# Netlify SPA fallback — serve the app on any path so client-side routing works
+/*    /index.html    200

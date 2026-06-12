@@ -33,7 +33,7 @@ export function DeviceTable() {
   return (
     <div className="card">
       <div className="card-header">
-        <span className="card-title">Alle HVAC-enheter</span>
+        <span className="card-title">Alle klima- og energienheter</span>
         <div className="flex items-center gap-1.5">
           {manufacturers.map(m => (
             <button

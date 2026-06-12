@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Phone, Mail, Building2, User, MessageSquare, CheckCircle2, Send } from 'lucide-react'
+import { track } from '../lib/analytics'
 
 export function ContactForm({ onPrivacy }: { onPrivacy?: () => void }) {
   const [submitted, setSubmitted] = useState(false)
@@ -31,9 +32,11 @@ export function ContactForm({ onPrivacy }: { onPrivacy?: () => void }) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: body.toString(),
       })
+      track('generate_lead', { buildings: form.buildings || 'ikke oppgitt' })
       setSubmitted(true)
     } catch {
       // fallback: show success anyway (Netlify handles it)
+      track('generate_lead', { buildings: form.buildings || 'ikke oppgitt' })
       setSubmitted(true)
     } finally {
       setLoading(false)

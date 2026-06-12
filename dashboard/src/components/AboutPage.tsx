@@ -46,6 +46,17 @@ export function AboutPage() {
           </div>
           <h2 className="text-base font-bold text-slate-800">Teknologi</h2>
         </div>
+        <figure className="rounded-xl overflow-hidden border border-slate-200">
+          <img
+            src="/styretavle.jpg"
+            alt="NordSense edge-kontroller montert på DIN-skinne i et styreskap, med RS485- og CAN-tilkoblinger til feltbus og 24 V strømforsyning"
+            className="w-full h-auto object-cover"
+            loading="lazy"
+          />
+          <figcaption className="text-[11px] text-slate-400 px-3 py-2 bg-slate-50 border-t border-slate-200">
+            Edge-kontroller installert i kundens styretavle — DIN-skinne, RS485/CAN-tilkobling og 24 V DC strømforsyning.
+          </figcaption>
+        </figure>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {[
             { label: 'Edge-kontroller', desc: 'Raspberry Pi Zero 2 WH med RS485/CAN HAT og 4G-tilkobling' },

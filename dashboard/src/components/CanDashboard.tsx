@@ -291,7 +291,7 @@ export function CanDashboard() {
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={faultFrequency} layout="vertical" margin={{ top: 0, right: 16, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
-              <XAxis type="number" tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
+              <XAxis type="number" allowDecimals={false} tick={{ fontSize: 10, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
               <YAxis
                 type="category" dataKey="name"
                 tick={{ fontSize: 10, fill: '#64748b' }} tickLine={false} axisLine={false}

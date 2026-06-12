@@ -1,4 +1,4 @@
-import { LayoutDashboard, Building2, Zap, BellRing, Settings, TrendingDown, ChevronRight, Network, Mail, Info } from 'lucide-react'
+import { LayoutDashboard, Building2, Zap, BellRing, Settings, TrendingDown, ChevronRight, Network, Mail, Info, Handshake, Calculator, Brain } from 'lucide-react'
 import clsx from 'clsx'
 
 const nav = [
@@ -6,10 +6,13 @@ const nav = [
   { id: 'buildings',      icon: Building2,        label: 'Bygg & enheter' },
   { id: 'energy',         icon: Zap,              label: 'Energianalyse' },
   { id: 'optimization',   icon: TrendingDown,     label: 'Optimalisering' },
+  { id: 'ai',             icon: Brain,            label: 'NordSense AI', hot: true },
   { id: 'alarms',         icon: BellRing,         label: 'Alarmer', badge: 2 },
   { id: 'canbus',         icon: Network,          label: 'CAN-bus', badge: 3 },
   { id: 'settings',       icon: Settings,         label: 'Innstillinger' },
+  { id: 'roi',            icon: Calculator,       label: 'ROI-kalkulator', hot: true },
   { id: 'contact',        icon: Mail,             label: 'Kontakt / Tilbud' },
+  { id: 'partners',       icon: Handshake,        label: 'Samarbeid' },
   { id: 'about',          icon: Info,             label: 'Om NordSense' },
 ]
 
@@ -24,7 +27,7 @@ export function Sidebar({ page, setPage }: { page: string; setPage: (p: string) 
           </div>
           <div>
             <div className="text-sm font-bold text-slate-900 leading-tight">NordSense</div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-widest leading-tight">Energioptimalisering</div>
+            <div className="text-[10px] text-slate-400 uppercase tracking-widest leading-tight">Intelligent energioptimalisering</div>
           </div>
         </div>
       </div>
@@ -42,7 +45,7 @@ export function Sidebar({ page, setPage }: { page: string; setPage: (p: string) 
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {nav.map(({ id, icon: Icon, label, badge }) => (
+        {nav.map(({ id, icon: Icon, label, badge, hot }) => (
           <button
             key={id}
             onClick={() => setPage(id)}
@@ -56,6 +59,14 @@ export function Sidebar({ page, setPage }: { page: string; setPage: (p: string) 
                 page === id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-600'
               )}>
                 {badge}
+              </span>
+            ) : null}
+            {hot ? (
+              <span className={clsx(
+                'text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide',
+                page === id ? 'bg-white/20 text-white' : 'bg-emerald-100 text-emerald-700'
+              )}>
+                Nytt
               </span>
             ) : null}
           </button>

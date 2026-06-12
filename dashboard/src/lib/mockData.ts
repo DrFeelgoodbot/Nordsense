@@ -26,7 +26,7 @@ export const devices = [
   { id: 'sw-g2', building_id: 'bygg-b', name: 'GOLD RX 150 (2)', manufacturer: 'Swegon', model: 'GOLD', type: 'ahu', power_kw: 6.9, cop: 4.0, setpoint: 18.5, inlet_temp: 15.8, outlet_temp: 19.8, status: 'ok', alarm: null },
 
   // Carel IR33 + Eliwell EWCM — Aker Brygge Tower
-  { id: 'e-ew1', building_id: 'bygg-c', name: 'Kjølerom multi-kompressor', manufacturer: 'Eliwell', model: 'EWCM_4120', type: 'cooling', power_kw: 22.6, cop: null, setpoint: -18.0, inlet_temp: -16.2, outlet_temp: -20.1, status: 'critical', alarm: 'Lav kjølemiddeltrykk' },
+  { id: 'e-ew1', building_id: 'bygg-c', name: 'Kjølerom multi-kompressor', manufacturer: 'Eliwell', model: 'EWCM_4120', type: 'cooling', power_kw: 22.6, cop: null, setpoint: -18.0, inlet_temp: -16.2, outlet_temp: -20.1, status: 'critical', alarm: 'Lavt sugetrykk' },
   { id: 'c-ir1', building_id: 'bygg-c', name: 'Kjøledisk 1', manufacturer: 'Carel', model: 'IR33', type: 'cooling', power_kw: 1.8, cop: null, setpoint: 4.0, inlet_temp: 5.2, outlet_temp: 2.8, status: 'ok', alarm: null },
   { id: 'c-ir2', building_id: 'bygg-c', name: 'Kjøledisk 2', manufacturer: 'Carel', model: 'IR33', type: 'cooling', power_kw: 1.6, cop: null, setpoint: 4.0, inlet_temp: 5.0, outlet_temp: 3.1, status: 'ok', alarm: null },
   // Swegon GOLD — Aker Brygge Tower
@@ -79,10 +79,25 @@ export const telemetryData = generateTelemetry('all')
 
 export const alarms = [
   { id: 1, device: 'Kjøleanlegg 1', building: 'Storgata 12', severity: 'warning', text: 'Høy kondenseringstemperatur', time: '08:42', acknowledged: false },
-  { id: 2, device: 'Varmepumpe 1', building: 'Aker Brygge Tower', severity: 'critical', text: 'Lav kjølemiddeltrykk', time: '06:17', acknowledged: false },
+  { id: 2, device: 'Varmepumpe 1', building: 'Aker Brygge Tower', severity: 'critical', text: 'Lavt sugetrykk', time: '06:17', acknowledged: false },
   { id: 3, device: 'Varmepumpe 2', building: 'Fornebu Park', severity: 'critical', text: 'Motorvern utløst', time: '05:03', acknowledged: true },
   { id: 4, device: 'Kjøleanlegg 2', building: 'Lysaker Atrium', severity: 'warning', text: 'Sensor feil — inntak', time: 'I går 22:11', acknowledged: true },
   { id: 5, device: 'Varmepumpe 3', building: 'Nydalen Hub', severity: 'info', text: 'Planlagt vedlikehold', time: 'I går 14:00', acknowledged: true },
+  { id: 6, device: 'Optyma kondenser', building: 'Fornebu Park', severity: 'critical', text: 'Mistanke om kjølemiddellekkasje', time: '13:21', acknowledged: false },
+  { id: 7, device: 'Pumpe-frekvensomformer 1', building: 'Lysaker Atrium', severity: 'critical', text: 'Sirkulasjonspumpe — driftsfeil', time: '11:55', acknowledged: false },
+  { id: 8, device: 'GOLD VX 200', building: 'Aker Brygge Tower', severity: 'warning', text: 'Avtrekksvifte — overstrøm', time: '11:42', acknowledged: false },
+  { id: 9, device: 'Ventilasjon 1', building: 'Storgata 12', severity: 'warning', text: 'Filterskifte påkrevd (∆p over grense)', time: '10:15', acknowledged: false },
+  { id: 10, device: 'CASA R (etasje 3)', building: 'Nydalen Hub', severity: 'info', text: 'CO₂ over grense — øker friskluft', time: '13:02', acknowledged: false },
+  { id: 11, device: 'Varmestyring ECL', building: 'Lysaker Atrium', severity: 'warning', text: 'Modbus — timeout på enhet', time: 'I går 18:34', acknowledged: true },
+  { id: 12, device: 'GOLD RX 150 (2)', building: 'Lysaker Atrium', severity: 'info', text: 'Vifteturtall redusert — Nord Pool dyrt vindu', time: '09:00', acknowledged: true },
+  { id: 13, device: 'Kjølerom multi-kompressor', building: 'Aker Brygge Tower', severity: 'warning', text: 'Høy diskhastighet kompressor 2', time: '07:48', acknowledged: false },
+  { id: 14, device: 'CRAC enhet 1', building: 'Aker Brygge Tower', severity: 'critical', text: 'Høy temperatur datarom 1 (28.4 °C)', time: '14:08', acknowledged: false },
+  { id: 15, device: 'CRAC enhet 2', building: 'Aker Brygge Tower', severity: 'warning', text: 'Høy fuktighet datarom 2 (68 % RH)', time: '13:35', acknowledged: false },
+  { id: 16, device: 'CRAC enhet 1', building: 'Aker Brygge Tower', severity: 'critical', text: 'Vifte feil — kondensator', time: '12:22', acknowledged: false },
+  { id: 17, device: 'Lekkasjedetektor', building: 'Aker Brygge Tower', severity: 'critical', text: 'Vannlekkasje under gulvet datarom 1', time: '11:08', acknowledged: false },
+  { id: 18, device: 'UPS-rom', building: 'Storgata 12', severity: 'warning', text: 'UPS-batteri — kort runtime (4 min)', time: '09:48', acknowledged: true },
+  { id: 19, device: 'Glykolkrets', building: 'Fornebu Park', severity: 'warning', text: 'Lavt nivå frostvæske', time: '08:22', acknowledged: false },
+  { id: 20, device: 'Brannspjeld B3', building: 'Lysaker Atrium', severity: 'info', text: 'Periodisk test — OK', time: 'I går 03:00', acknowledged: true },
 ]
 
 export const optimizationLog = [
@@ -98,8 +113,8 @@ export const kpis = {
   totalCostToday: 1842,
   savingsToday: 312,
   savingsPct: 14.5,
-  activeAlarms: 2,
-  criticalAlarms: 2,
+  activeAlarms: 13,
+  criticalAlarms: 6,
   buildings: buildings.length,
   avgCop: 3.85,
 }
